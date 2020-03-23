@@ -180,7 +180,7 @@ class Webhook extends Controller {
                 }
                 
                 $carouselTemplateBuilder = new CarouselTemplateBuilder($matkul);
-                $this->userGateway->setState($this->user['user_id'], 1);
+                $this->userGateway->setUserState($this->user['user_id'], 1);
 
                 $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
