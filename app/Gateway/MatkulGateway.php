@@ -29,10 +29,10 @@ class MatkulGateway {
     }
 
     function getAllMatkul() {
-        $matkul = $this->db->table('matkul')->all();
+        $matkul = $this->db->table('matkul')->get();
 
         if($matkul) {
-            return (array) $matkul;
+            return $matkul;
         }
 
         return null;
