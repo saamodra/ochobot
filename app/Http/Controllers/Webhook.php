@@ -167,7 +167,7 @@ class Webhook extends Controller {
         if($this->user['state'] == 0) {
             if(strtolower($userMessage) == "tugas" || strtolower($userMessage) == "kembali") {
                 $matkul = array();
-                foreach($this->MatkulGateway->getAllMatkul() as $t) {
+                foreach($this->matkulGateway->getAllMatkul() as $t) {
                     $matkul[] = new CarouselColumnTemplateBuilder(
                             $t->nama_matkul, 
                             $t->semester." - ".$t->tahun_ajaran,
