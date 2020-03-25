@@ -103,22 +103,43 @@ class Webhook extends Controller {
             foreach ($data['events'] as $event)
             {
                 // skip group and room event
-                $userId = $event['source']['userId'];
-                if($userId) {
-                    
-                    $getprofile = $this->userGateway->getUser($userId);
-                    $profile = $getprofile->getJSONDecodedBody();
-                    $greetings = new TextMessageBuilder("Halo, " . $profile['displayName']);
-            
-                    $result = $this->bot->replyMessage($event['replyToken'], $greetings);
-                    $response->getBody()->write((string) $result->getJSONDecodedBody());
-                    return $response
-                        ->withHeader('Content-Type', 'application/json')
-                        ->withStatus($result->getHTTPStatus());
+                $this->user = $this->userGateway->getUser($event['source']['userId']);
+                if($event['source']['type'] == 'group') {
+                    if($event['type'] == 'join') {
+                        $this->greetingMessage($event['source']['groupId']);
+                    } else {
+                        if(!$this->user) $this->followCallback($event);
+                        else {
+                            // respond event
+                            if($event['type'] == 'message'){
+                                if(method_exists($this, $event['message']['type'].'Message')){
+                                    $this->{$event['message']['type'].'Message'}($event);
+                                }
+                            } else {
+                                if(method_exists($this, $event['type'].'Callback')){
+                                    $this->{$event['type'].'Callback'}($event);
+                                }
+                            }
+                        }
+                    }
+                } else if($event['source']['type'] == 'room') {
+                    $this->greetingMessage($event['source']['groupId']);
+        
+                    // if user not registered
+                    if(!$this->user) $this->followCallback($event);
+                    else {
+                        // respond event
+                        if($event['type'] == 'message'){
+                            if(method_exists($this, $event['message']['type'].'Message')){
+                                $this->{$event['message']['type'].'Message'}($event);
+                            }
+                        } else {
+                            if(method_exists($this, $event['type'].'Callback')){
+                                $this->{$event['type'].'Callback'}($event);
+                            }
+                        }
+                    }
                 } else {
-
-                    // get user data from database
-                    $this->user = $this->userGateway->getUser($event['source']['userId']);
         
                     // if user not registered
                     if(!$this->user) $this->followCallback($event);
@@ -143,6 +164,35 @@ class Webhook extends Controller {
         $this->response->setContent("No events found!");
         $this->response->setStatusCode(200);
         return $this->response;
+    }
+
+    private function greetingMessage($eventId) {
+        $getprofile = $this->bot->getProfile($eventId);
+        $profile = $getprofile->getJSONDecodedBody();
+        $message = "Halo, " . $profile['displayName'] . "!\n";
+        $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
+        
+
+        $buttonsTemplate = new ButtonTemplateBuilder(
+            null,
+            $message,
+            null,
+            [
+                new MessageTemplateActionBuilder("Mata Kuliah", "Mata Kuliah"), 
+                new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
+            ]
+        );
+
+
+        //create sticker message
+        $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002768);
+
+        // merge all message
+        $multiMesssageBuilder = new MultiMessageBuilder();
+        $multiMesssageBuilder->add($stickerMessageBuilder);
+        $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
+
+        $result = $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
     }
 
     private function followCallback($event) {
