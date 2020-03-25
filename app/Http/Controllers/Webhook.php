@@ -146,8 +146,12 @@ class Webhook extends Controller {
                 null,
                 $message,
                 null,
-                new MessageTemplateActionBuilder("Tugas", "Tugas"))
+                [
+                    new MessageTemplateActionBuilder("Mata Kuliah", "Tugas"), 
+                    new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
+                ]
             );
+
 
             //create sticker message
             $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002768);
@@ -175,7 +179,7 @@ class Webhook extends Controller {
     private function textMessage($event) {
         $userMessage = $event['message']['text'];
         if($this->user['state'] == 0) {
-            if(strtolower($userMessage) == "tugas" || strtolower($userMessage) == "kembali") {
+            if(strtolower($userMessage) == "matkul" || strtolower($userMessage) == "kembali") {
                 $matkul = array();
                 foreach($this->matkulGateway->getAllMatkul() as $t) {
                     $matkul[] = new CarouselColumnTemplateBuilder(
@@ -228,6 +232,19 @@ class Webhook extends Controller {
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "kembali") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
+                $message = "Apa yang bisa Ochobot lakukan?";
+                $buttonsTemplate = new ButtonTemplateBuilder(
+                    null,
+                    $message,
+                    null,
+                    [
+                        new MessageTemplateActionBuilder("Mata Kuliah", "Tugas"), 
+                        new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
+                    ]
+                );
+
+                $templateMessage = new TemplateMessageBuilder('Home', $buttonsTemplate);
+                $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else {
                 
                 $message = "Keyword yg anda masukkan salah!";
