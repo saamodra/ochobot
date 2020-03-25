@@ -182,7 +182,7 @@ class Webhook extends Controller {
                 $carouselTemplateBuilder = new CarouselTemplateBuilder($matkul);
                 $this->userGateway->setUserState($this->user['user_id'], 1);
 
-                $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
+                $templateMessage = new TemplateMessageBuilder('CarouselMatkul', $carouselTemplateBuilder);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else {
                 $message = 'Silahkan kirim pesan "Tugas" untuk melihat tugas.';
@@ -215,7 +215,7 @@ class Webhook extends Controller {
                 $carouselTemplateBuilder = new CarouselTemplateBuilder($tugas);
                 $this->userGateway->setUserState($this->user['user_id'], 1);
 
-                $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
+                $templateMessage = new TemplateMessageBuilder('CarouselTugas', $carouselTemplateBuilder);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "kembali") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
