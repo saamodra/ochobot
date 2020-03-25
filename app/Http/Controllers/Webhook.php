@@ -169,7 +169,7 @@ class Webhook extends Controller {
     private function greetingMessage($eventId) {
         $getprofile = $this->bot->getProfile($eventId);
         $profile = $getprofile->getJSONDecodedBody();
-        $message = "Halo, " . $profile['displayName'] . "!\n";
+        $message = "Halo, " . $profile . "!\n";
         $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
         
 
