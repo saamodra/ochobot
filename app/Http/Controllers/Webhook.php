@@ -194,7 +194,7 @@ class Webhook extends Controller {
         } else if($this->user['state'] == 1) {
             if(substr(strtolower($userMessage),0, 11) == "lihat tugas") {                
                 $msg = array();
-                $msg = explode("/", $userMessage);
+                $msg = explode(" ", $userMessage);
                 $idMatkul = end($msg);
                 $tugas = array();
                 foreach($this->tugasGateway->getTugasMatkul($idMatkul) as $t) {
