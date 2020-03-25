@@ -196,6 +196,7 @@ class Webhook extends Controller {
                 $msg = array();
                 $msg = explode(" ", $userMessage);
                 $idMatkul = end($msg);
+                $this->bot->replyMessage($event['replyToken'], $idMatkul);
                 $tugas = array();
                 foreach($this->tugasGateway->getTugasMatkul($idMatkul) as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
@@ -210,6 +211,7 @@ class Webhook extends Controller {
                         );
                 }
 
+                $this->bot->replyMessage($event['replyToken'], $tugas);
                 $carouselTemplateBuilder = new CarouselTemplateBuilder($tugas);
 
                 $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
