@@ -193,7 +193,9 @@ class Webhook extends Controller {
 
         } else if($this->user['state'] == 1) {
             if(substr(strtolower($userMessage),0, 11) == "lihat tugas") {                
-                $idMatkul = end(explode("/", $userMessage));
+                $msg = array();
+                $msg = explode("/", $userMessage);
+                $idMatkul = end($msg);
                 $tugas = array();
                 foreach($this->getTugasMatkul($idMatkul) as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
