@@ -170,7 +170,7 @@ class Webhook extends Controller {
                 foreach($this->matkulGateway->getAllMatkul() as $t) {
                     $matkul[] = new CarouselColumnTemplateBuilder(
                             $t->nama_matkul, 
-                            $t->semester." - ".$t->tahun_ajaran,
+                            "Semester ".$t->semester." - ".$t->tahun_ajaran,
                             $t->image, 
                             [
                                 new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
@@ -196,8 +196,9 @@ class Webhook extends Controller {
                 $msg = array();
                 $msg = explode(" ", $userMessage);
                 $idMatkul = end($msg);
-                $this->bot->replyMessage($event['replyToken'], new TextMessageBuilder($idMatkul));
                 $tugas = array();
+                $this->bot->replyMessage($event['replyToken'], new TextMessageBuilder($this->tugasGateway->getTugasMatkul($idMatkul)));
+                $a = 0;
                 foreach($this->tugasGateway->getTugasMatkul($idMatkul) as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
                             $t->judul, 
@@ -209,6 +210,8 @@ class Webhook extends Controller {
                                 new MessageTemplateActionBuilder("Kembali", "Kembali"),
                             ]
                         );
+                    $a++;
+                    $this->bot->replyMessage($event['replyToken'], new TextMessageBuilder($a));
                 }
 
                 $carouselTemplateBuilder = new CarouselTemplateBuilder($tugas);
