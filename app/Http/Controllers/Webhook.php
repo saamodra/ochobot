@@ -210,7 +210,7 @@ class Webhook extends Controller {
                         );
                 }
 
-                $carouselTemplateBuilder = new CarouselTemplateBuilder($matkul);
+                $carouselTemplateBuilder = new CarouselTemplateBuilder($tugas);
 
                 $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
