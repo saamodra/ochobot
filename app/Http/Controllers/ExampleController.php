@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 class ExampleController extends Controller
 {
     /**
@@ -14,5 +15,18 @@ class ExampleController extends Controller
         //
     }
 
-    //
+    public function getTugasMatkul(int $matkulId)
+    {
+        $tugas = app('db')->table('tugas')
+            ->where('tugas.id_matkul', $matkulId)
+            ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
+            ->join('matkul', 'matkul.id_matkul', 'tugas.id_matkul')
+            ->get();
+ 
+        if ($tugas) {
+            return (array) $tugas;
+        }
+ 
+        return null;
+    }
 }

@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Gateway;
-
 use Illuminate\Database\ConnectionInterface;
+use DB;
 
 class TugasGateway {
     /**
