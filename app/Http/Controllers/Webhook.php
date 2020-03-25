@@ -215,7 +215,8 @@ class Webhook extends Controller {
                 $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else {
-                $message = 'Keyword yang anda masukkan salah!';
+                
+                $message = substr(strtolower($userMessage),0, 11) . " lihat tugas ";
                 $textMessageBuilder = new TextMessageBuilder($message);
                 $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
 
