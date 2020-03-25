@@ -103,25 +103,39 @@ class Webhook extends Controller {
             foreach ($data['events'] as $event)
             {
                 // skip group and room event
-                if(! isset($event['source']['userId'])) continue;
-    
-                // get user data from database
-                $this->user = $this->userGateway->getUser($event['source']['userId']);
-    
-                // if user not registered
-                if(!$this->user) $this->followCallback($event);
-                else {
-                    // respond event
-                    if($event['type'] == 'message'){
-                        if(method_exists($this, $event['message']['type'].'Message')){
-                            $this->{$event['message']['type'].'Message'}($event);
-                        }
-                    } else {
-                        if(method_exists($this, $event['type'].'Callback')){
-                            $this->{$event['type'].'Callback'}($event);
+                $userId = $event['source']['userId'];
+                if($userId) {
+                    
+                    $getprofile = $this->bot->getUser($userId);
+                    $profile = $getprofile->getJSONDecodedBody();
+                    $greetings = new TextMessageBuilder("Halo, " . $profile['displayName']);
+            
+                    $result = $this->bot->replyMessage($event['replyToken'], $greetings);
+                    $response->getBody()->write((string) $result->getJSONDecodedBody());
+                    return $response
+                        ->withHeader('Content-Type', 'application/json')
+                        ->withStatus($result->getHTTPStatus());
+                } else {
+
+                    // get user data from database
+                    $this->user = $this->userGateway->getUser($event['source']['userId']);
+        
+                    // if user not registered
+                    if(!$this->user) $this->followCallback($event);
+                    else {
+                        // respond event
+                        if($event['type'] == 'message'){
+                            if(method_exists($this, $event['message']['type'].'Message')){
+                                $this->{$event['message']['type'].'Message'}($event);
+                            }
+                        } else {
+                            if(method_exists($this, $event['type'].'Callback')){
+                                $this->{$event['type'].'Callback'}($event);
+                            }
                         }
                     }
                 }
+    
             }
         }
     
@@ -138,7 +152,7 @@ class Webhook extends Controller {
 
             //create welcome message
             $message = "Salam kenal, " . $profile['displayName'] . "!\n";
-            $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Tugas\" untuk menampilkan daftar tugas";
+            $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
             $textMessageBuilder = new TextMessageBuilder($message);
             
     
@@ -178,7 +192,7 @@ class Webhook extends Controller {
     private function textMessage($event) {
         $userMessage = $event['message']['text'];
         if($this->user['state'] == 0) {
-            if(strtolower($userMessage) == "mata kuliah" || strtolower($userMessage) == "kembali") {
+            if(strtolower($userMessage) == "mata kuliah") {
                 $matkul = array();
                 foreach($this->matkulGateway->getAllMatkul() as $t) {
                     $matkul[] = new CarouselColumnTemplateBuilder(
@@ -219,7 +233,7 @@ class Webhook extends Controller {
                 $templateMessage = new TemplateMessageBuilder('Tugas '.$matkul, $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else {
-                $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Tugas" untuk melihat semua tugas.';
+                $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Semua Tugas" untuk melihat semua tugas.';
                 $textMessageBuilder = new TextMessageBuilder($message);
                 $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
 
