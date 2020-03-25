@@ -44,10 +44,13 @@ class TugasGateway {
     }
     
     function getAllTugas() {
-        $tugas = $this->db->table('tugas')->all();
+        $tugas = $this->db->table('tugas')
+        ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
+        ->join('matkul', 'matkul.id_matkul', 'tugas.id_matkul')
+        ->get();
 
         if($tugas) {
-            return (array) $tugas;
+            return $tugas;
         }
 
         return null;

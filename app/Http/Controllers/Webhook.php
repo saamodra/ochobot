@@ -138,8 +138,16 @@ class Webhook extends Controller {
 
             //create welcome message
             $message = "Salam kenal, " . $profile['displayName'] . "!\n";
-            $message .= "Silahkan kirim pesan \"Tugas\" untuk melihat tugas dari Matkul Prodi Sistem Informasi";
+            $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Tugas\" untuk menampilkan daftar tugas";
             $textMessageBuilder = new TextMessageBuilder($message);
+            
+    
+            $buttonsTemplate = new ButtonTemplateBuilder(
+                null,
+                $message,
+                null,
+                new MessageTemplateActionBuilder("Tugas", "Tugas"))
+            );
 
             //create sticker message
             $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002768);
@@ -148,7 +156,7 @@ class Webhook extends Controller {
             // merge all message
             $multiMesssageBuilder = new MultiMessageBuilder();
             $multiMesssageBuilder->add($stickerMessageBuilder);
-            $multiMesssageBuilder->add($textMessageBuilder);
+            $multiMesssageBuilder->add($buttonsTemplate);
 
 
             // send reply message
@@ -161,6 +169,8 @@ class Webhook extends Controller {
             );
         }
     }
+
+    
 
     private function textMessage($event) {
         $userMessage = $event['message']['text'];
@@ -212,18 +222,7 @@ class Webhook extends Controller {
                 
                 }
 
-                $carouselTugas = new CarouselTemplateBuilder([
-                    new CarouselColumnTemplateBuilder(
-                        "asd", 
-                        "asdasd",
-                        "https://i0.wp.com/angryanimebitches.com/wp-content/uploads/2013/03/tamakomarket-overallreview-tamakoanddera.jpg", 
-                        [
-                            new UriTemplateActionBuilder('Buka E-Learning', 'https://i0.wp.com/angryanimebitches.com/wp-content/uploads/2013/03/tamakomarket-overallreview-tamakoanddera.jpg'),
-                            new UriTemplateActionBuilder('Buka Modul Soal', 'https://i0.wp.com/angryanimebitches.com/wp-content/uploads/2013/03/tamakomarket-overallreview-tamakoanddera.jpg'),
-                            new MessageTemplateActionBuilder("Kembali", "Kembali"),
-                        ]
-                    )
-                ]);
+                $carouselTugas = new CarouselTemplateBuilder($tugas);
 
                 $templateMessage = new TemplateMessageBuilder('CarouselTugas', $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
@@ -238,22 +237,4 @@ class Webhook extends Controller {
             }
         } 
     }
-
-    private function stickerMessage($event) {
-        //create sticker message
-        $stickerMessageBuilder = new StickerMessageBuilder(1, 106);
-
-        //create text message
-        $message = 'Silahkan kirim pesan "MULAI" untuk memulai kuis.';
-        $textMessageBuilder = new TextMessageBuilder($message);
-
-        //merge all message
-        $multiMesssageBuilder = new MultiMessageBuilder();
-        $multiMesssageBuilder->add($stickerMessageBuilder);
-        $multiMesssageBuilder->add($textMessageBuilder);
-
-        //send message
-        $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
-    }
-
 }
