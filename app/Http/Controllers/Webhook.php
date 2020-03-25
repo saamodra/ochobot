@@ -106,7 +106,7 @@ class Webhook extends Controller {
                 $userId = $event['source']['userId'];
                 if($userId) {
                     
-                    $getprofile = $this->bot->getUser($userId);
+                    $getprofile = $this->userGateway->getUser($userId);
                     $profile = $getprofile->getJSONDecodedBody();
                     $greetings = new TextMessageBuilder("Halo, " . $profile['displayName']);
             
