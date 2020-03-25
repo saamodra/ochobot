@@ -210,12 +210,12 @@ class Webhook extends Controller {
                         );
                 }
 
-                $this->userGateway->setState($this->user['user_id'], 0);
                 $carouselTemplateBuilder = new CarouselTemplateBuilder($matkul);
-                $this->userGateway->setState($this->user['user_id'], 1);
 
                 $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
+            } else if(strtolower($userMessage) == "kembali") {
+                $this->userGateway->setUserState($this->user['user_id'], 0);
             } else {
                 
                 $message = "Keyword yg anda masukkan salah!";
