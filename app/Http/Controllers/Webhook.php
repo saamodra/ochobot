@@ -212,7 +212,18 @@ class Webhook extends Controller {
                 
                 }
 
-                $carouselTugas = new CarouselTemplateBuilder($tugas);
+                $carouselTugas = new CarouselTemplateBuilder([
+                    new CarouselColumnTemplateBuilder(
+                        "asd", 
+                        "asdasd",
+                        "https://i0.wp.com/angryanimebitches.com/wp-content/uploads/2013/03/tamakomarket-overallreview-tamakoanddera.jpg", 
+                        [
+                            new UriTemplateActionBuilder('Buka E-Learning', 'https://i0.wp.com/angryanimebitches.com/wp-content/uploads/2013/03/tamakomarket-overallreview-tamakoanddera.jpg'),
+                            new UriTemplateActionBuilder('Buka Modul Soal', 'null'),
+                            new MessageTemplateActionBuilder("Kembali", "Kembali"),
+                        ]
+                    )
+                ]);
 
                 $templateMessage = new TemplateMessageBuilder('CarouselTugas', $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
