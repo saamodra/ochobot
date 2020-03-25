@@ -36,8 +36,11 @@ class TugasGateway {
             ->join('matkul', 'matkul.id_matkul', 'tugas.id_matkul')
             ->get();
 
- 
-        return $tugas;
+        if($tugas) {
+            return (array) $tugas;
+        }
+        
+        return null;
     }
     
     function getAllTugas() {
