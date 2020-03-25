@@ -31,8 +31,8 @@ class TugasGateway {
     function getTugasMatkul(int $matkulId)
     {
         $tugas = $this->db->table('tugas')
-            ->where('id_matkul', $matkulId)
-            ->whereDate('due_date', '>=', NOW())
+            ->where('tugas.id_matkul', $matkulId)
+            ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
             ->join('matkul', 'matkul.id_matkul', 'tugas.id_matkul')
             ->get();
  

@@ -197,7 +197,7 @@ class Webhook extends Controller {
                 $msg = explode("/", $userMessage);
                 $idMatkul = end($msg);
                 $tugas = array();
-                foreach($this->getTugasMatkul($idMatkul) as $t) {
+                foreach($this->tugasGateway->getTugasMatkul($idMatkul) as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
                             $t->judul, 
                             $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
