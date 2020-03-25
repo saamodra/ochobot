@@ -192,7 +192,7 @@ class Webhook extends Controller {
             }
 
         } else if($this->user['state'] == 1) {
-            if(substr(strtolower($userMessage),0, 11) == "lihat tugas ") {                
+            if(substr(strtolower($userMessage),0, 11) == "lihat tugas") {                
                 $idMatkul = end(explode("/", $userMessage));
                 $tugas = array();
                 foreach($this->getTugasMatkul($idMatkul) as $t) {
@@ -216,7 +216,7 @@ class Webhook extends Controller {
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else {
                 
-                $message = substr(strtolower($userMessage),0, 11) . " lihat tugas ";
+                $message = "Keyword yg anda masukkan salah!";
                 $textMessageBuilder = new TextMessageBuilder($message);
                 $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
 
