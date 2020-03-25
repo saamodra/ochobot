@@ -219,7 +219,7 @@ class Webhook extends Controller {
                         "https://i0.wp.com/angryanimebitches.com/wp-content/uploads/2013/03/tamakomarket-overallreview-tamakoanddera.jpg", 
                         [
                             new UriTemplateActionBuilder('Buka E-Learning', 'https://i0.wp.com/angryanimebitches.com/wp-content/uploads/2013/03/tamakomarket-overallreview-tamakoanddera.jpg'),
-                            new UriTemplateActionBuilder('Buka Modul Soal', 'null'),
+                            new UriTemplateActionBuilder('Buka Modul Soal', 'https://i0.wp.com/angryanimebitches.com/wp-content/uploads/2013/03/tamakomarket-overallreview-tamakoanddera.jpg'),
                             new MessageTemplateActionBuilder("Kembali", "Kembali"),
                         ]
                     )
