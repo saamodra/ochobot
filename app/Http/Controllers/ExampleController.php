@@ -24,9 +24,19 @@ class ExampleController extends Controller
             ->get();
  
         if ($tugas) {
-            return (array) $tugas;
+            return $tugas;
         }
  
+        return null;
+    }
+
+    public function getAllMatkul() {
+        $matkul = app('db')->table('matkul')->get();
+
+        if($matkul) {
+            return $matkul;
+        }
+
         return null;
     }
 }

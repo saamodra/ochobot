@@ -198,6 +198,7 @@ class Webhook extends Controller {
                 $idMatkul = end($msg);
                 $tugas = array();
                 $a = 0;
+                $multiMesssageBuilder = new MultiMessageBuilder();
                 foreach($this->tugasGateway->getTugasMatkul($idMatkul) as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
                             $t->judul, 
@@ -210,13 +211,14 @@ class Webhook extends Controller {
                             ]
                         );
                     $a++;
-                    $this->bot->replyMessage($event['replyToken'], new TextMessageBuilder($t->judul));
+                    $multiMesssageBuilder->add(new TextMessageBuilder($t->judul));
                 }
 
-                $carouselTemplateBuilder = new CarouselTemplateBuilder($tugas);
+                // $carouselTemplateBuilder = new CarouselTemplateBuilder($tugas);
 
-                $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
-                $this->bot->replyMessage($event['replyToken'], $templateMessage);
+                // $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
+                $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
+                // $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "kembali") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
             } else {
