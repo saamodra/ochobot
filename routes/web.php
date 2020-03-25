@@ -19,3 +19,15 @@ $router->get('/', function () use ($router) {
 $router->post('/webhook', 'Webhook');
 
 $router->get('/asd/{matkulId}', 'ExampleController@getTugasMatkul');
+
+// $router->get('/asde/{matkulId}', function($matkulId) {
+//     $matkul = app('db')->table('matkul')
+//             ->where('id', $matkulId)
+//             ->first();
+ 
+//         if ($matkul) {
+//             return (array) $matkul;
+//         }
+ 
+//         return null;
+// });

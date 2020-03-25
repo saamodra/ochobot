@@ -35,12 +35,9 @@ class TugasGateway {
             ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
             ->join('matkul', 'matkul.id_matkul', 'tugas.id_matkul')
             ->get();
+
  
-        if ($tugas) {
-            return (array) $tugas;
-        }
- 
-        return null;
+        return $tugas;
     }
     
     function getAllTugas() {
