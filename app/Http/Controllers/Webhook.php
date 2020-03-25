@@ -213,6 +213,7 @@ class Webhook extends Controller {
                 }
 
                 $carouselTemplateBuilder = new CarouselTemplateBuilder($tugas);
+                $this->userGateway->setUserState($this->user['user_id'], 1);
 
                 $templateMessage = new TemplateMessageBuilder('Carousel', $carouselTemplateBuilder);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
