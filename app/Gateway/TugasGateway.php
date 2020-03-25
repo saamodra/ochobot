@@ -37,9 +37,9 @@ class TugasGateway {
             ->get();
 
         if($tugas) {
-            return (array) $tugas;
+            return $tugas;
         }
-        
+
         return null;
     }
     
