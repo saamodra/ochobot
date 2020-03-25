@@ -103,7 +103,7 @@ class Webhook extends Controller {
             foreach ($data['events'] as $event)
             {
                 // skip group and room event
-                $this->user = $this->userGateway->getUser($event['source']['userId']);
+                
                 if($event['source']['type'] == 'group') {
                     if($event['type'] == 'join') {
                         $this->greetingMessage($event['source']['groupId']);
@@ -124,7 +124,7 @@ class Webhook extends Controller {
                     }
                 } else if($event['source']['type'] == 'room') {
                     $this->greetingMessage($event['source']['groupId']);
-        
+                    $this->user = $this->userGateway->getUser($event['source']['userId']);
                     // if user not registered
                     if(!$this->user) $this->followCallback($event);
                     else {
@@ -140,7 +140,7 @@ class Webhook extends Controller {
                         }
                     }
                 } else {
-        
+                    $this->user = $this->userGateway->getUser($event['source']['userId']);
                     // if user not registered
                     if(!$this->user) $this->followCallback($event);
                     else {
