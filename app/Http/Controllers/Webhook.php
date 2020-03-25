@@ -147,7 +147,7 @@ class Webhook extends Controller {
                 $message,
                 null,
                 [
-                    new MessageTemplateActionBuilder("Mata Kuliah", "Tugas"), 
+                    new MessageTemplateActionBuilder("Mata Kuliah", "Mata Kuliah"), 
                     new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
                 ]
             );
@@ -156,11 +156,10 @@ class Webhook extends Controller {
             //create sticker message
             $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002768);
 
-
             // merge all message
             $multiMesssageBuilder = new MultiMessageBuilder();
             $multiMesssageBuilder->add($stickerMessageBuilder);
-            $multiMesssageBuilder->add($buttonsTemplate);
+            $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
 
 
             // send reply message
@@ -179,7 +178,7 @@ class Webhook extends Controller {
     private function textMessage($event) {
         $userMessage = $event['message']['text'];
         if($this->user['state'] == 0) {
-            if(strtolower($userMessage) == "matkul" || strtolower($userMessage) == "kembali") {
+            if(strtolower($userMessage) == "mata kuliah" || strtolower($userMessage) == "kembali") {
                 $matkul = array();
                 foreach($this->matkulGateway->getAllMatkul() as $t) {
                     $matkul[] = new CarouselColumnTemplateBuilder(
@@ -198,21 +197,10 @@ class Webhook extends Controller {
 
                 $templateMessage = new TemplateMessageBuilder('CarouselMatkul', $carouselMatkul);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
-            } else {
-                $message = 'Silahkan kirim pesan "Tugas" untuk melihat tugas.';
-                $textMessageBuilder = new TextMessageBuilder($message);
-                $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
-
-            }
-
-        } else if($this->user['state'] == 1) {
-            if(substr(strtolower($userMessage),0, 11) == "lihat tugas") {                
-                $msg = array();
-                $msg = explode(" ", $userMessage);
-                $idMatkul = end($msg);
-                $tugas = array();
-                
-                foreach($this->tugasGateway->getTugasMatkul($idMatkul) as $t) {
+            } else if(strtolower($userMessage) == "tugas") {
+                $matkul = "";
+                foreach($this->tugasGateway->getAllTugas() as $t) {
+                    $matkul = $t->nama_matkul;
                     $tugas[] = new CarouselColumnTemplateBuilder(
                             $t->judul, 
                             $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
@@ -228,7 +216,41 @@ class Webhook extends Controller {
 
                 $carouselTugas = new CarouselTemplateBuilder($tugas);
 
-                $templateMessage = new TemplateMessageBuilder('CarouselTugas', $carouselTugas);
+                $templateMessage = new TemplateMessageBuilder('Tugas '.$matkul, $carouselTugas);
+                $this->bot->replyMessage($event['replyToken'], $templateMessage);
+            } else {
+                $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Tugas" untuk melihat semua tugas.';
+                $textMessageBuilder = new TextMessageBuilder($message);
+                $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+
+            }
+
+        } else if($this->user['state'] == 1) {
+            if(substr(strtolower($userMessage),0, 11) == "lihat tugas") {                
+                $msg = array();
+                $msg = explode(" ", $userMessage);
+                $idMatkul = end($msg);
+                $tugas = array();
+                $matkul = "";
+                
+                foreach($this->tugasGateway->getTugasMatkul($idMatkul) as $t) {
+                    $matkul = $t->nama_matkul;
+                    $tugas[] = new CarouselColumnTemplateBuilder(
+                            $t->judul, 
+                            $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
+                            $t->image, 
+                            [
+                                new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
+                                new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
+                                new MessageTemplateActionBuilder("Kembali", "Kembali"),
+                            ]
+                        );
+                
+                }
+
+                $carouselTugas = new CarouselTemplateBuilder($tugas);
+
+                $templateMessage = new TemplateMessageBuilder('Tugas '.$matkul, $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "kembali") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
@@ -238,7 +260,7 @@ class Webhook extends Controller {
                     $message,
                     null,
                     [
-                        new MessageTemplateActionBuilder("Mata Kuliah", "Tugas"), 
+                        new MessageTemplateActionBuilder("Mata Kuliah", "Mata Kuliah"), 
                         new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
                     ]
                 );
