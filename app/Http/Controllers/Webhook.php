@@ -109,7 +109,7 @@ class Webhook extends Controller {
                         $this->greetingMessage($event);
                     } else {
                         $getprofile = $this->bot->getProfile($event['source']['userId']);
-                        $profile = $getprofile->JSONDecodedBody();
+                        $profile = $getprofile->getJSONDecodedBody();
                         $message = 'Halo, ' . $profile['displayName'];
                         $textMessageBuilder = new TextMessageBuilder($message);
                         $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
