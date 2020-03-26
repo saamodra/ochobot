@@ -108,53 +108,17 @@ class Webhook extends Controller {
                     if($event['type'] == 'join') {
                         $this->greetingMessage($event['source']['groupId']);
                     } else {
-                        if(!$this->user) $this->followCallback($event);
-                        else {
-                            // respond event
-                            if($event['type'] == 'message'){
-                                if(method_exists($this, $event['message']['type'].'Message')){
-                                    $this->{$event['message']['type'].'Message'}($event);
-                                }
-                            } else {
-                                if(method_exists($this, $event['type'].'Callback')){
-                                    $this->{$event['type'].'Callback'}($event);
-                                }
-                            }
-                        }
+                        handleOneOnOneChats();
                     }
                 } else if($event['source']['type'] == 'room') {
                     $this->greetingMessage($event['source']['groupId']);
                     $this->user = $this->userGateway->getUser($event['source']['userId']);
-                    // if user not registered
-                    if(!$this->user) $this->followCallback($event);
-                    else {
-                        // respond event
-                        if($event['type'] == 'message'){
-                            if(method_exists($this, $event['message']['type'].'Message')){
-                                $this->{$event['message']['type'].'Message'}($event);
-                            }
-                        } else {
-                            if(method_exists($this, $event['type'].'Callback')){
-                                $this->{$event['type'].'Callback'}($event);
-                            }
-                        }
-                    }
+                    
+                    handleOneOnOneChats();
                 } else {
                     $this->user = $this->userGateway->getUser($event['source']['userId']);
-                    // if user not registered
-                    if(!$this->user) $this->followCallback($event);
-                    else {
-                        // respond event
-                        if($event['type'] == 'message'){
-                            if(method_exists($this, $event['message']['type'].'Message')){
-                                $this->{$event['message']['type'].'Message'}($event);
-                            }
-                        } else {
-                            if(method_exists($this, $event['type'].'Callback')){
-                                $this->{$event['type'].'Callback'}($event);
-                            }
-                        }
-                    }
+                    
+                    handleOneOnOneChats();
                 }
     
             }
@@ -166,10 +130,26 @@ class Webhook extends Controller {
         return $this->response;
     }
 
+    private function handleOneOnOneChats() {
+        if(!$this->user) $this->followCallback($event);
+        else {
+            // respond event
+            if($event['type'] == 'message'){
+                if(method_exists($this, $event['message']['type'].'Message')){
+                    $this->{$event['message']['type'].'Message'}($event);
+                }
+            } else {
+                if(method_exists($this, $event['type'].'Callback')){
+                    $this->{$event['type'].'Callback'}($event);
+                }
+            }
+        }
+    }
+
     private function greetingMessage($eventId) {
         $getprofile = $this->bot->getProfile($eventId);
         $profile = $getprofile->getJSONDecodedBody();
-        $message = "Halo, " . implode('|', $getprofile) . "!\n";
+        $message = "Halo, " . "!\n";
         $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
         
 
@@ -193,6 +173,11 @@ class Webhook extends Controller {
         $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
 
         $result = $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
+    }
+
+    private function leaveCallback($event) {
+        $res = $this->bot->getProfile($event['source']['userId']);
+
     }
 
     private function followCallback($event) {
