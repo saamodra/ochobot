@@ -113,15 +113,8 @@ class Webhook extends Controller {
                         // $message = 'Halo, ' . $profile['displayName'];
                         // $textMessageBuilder = new TextMessageBuilder($message);
                         // $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
-                        if($event['type'] == 'message'){
-                            if(method_exists($this, $event['message']['type'].'Message')){
-                                $this->{$event['message']['type'].'Message'}($event);
-                            }
-                        } else {
-                            if(method_exists($this, $event['type'].'Callback')){
-                                $this->{$event['type'].'Callback'}($event);
-                            }
-                        }
+                        $this->textMessage($event);
+                        
                     }
                 } else if($event['source']['type'] == 'room') {
                     $this->greetingMessage($event);
@@ -166,7 +159,7 @@ class Webhook extends Controller {
             $getprofile = $this->bot->getProfile($event['source']['groupId']);
         }
         $profile = $getprofile->getJSONDecodedBody();
-        $message = "Halo, " . "!\n";
+        $message = "Halo, Semua!\n";
         $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
         
 
@@ -250,7 +243,7 @@ class Webhook extends Controller {
                     $matkul[] = new CarouselColumnTemplateBuilder(
                             $t->nama_matkul, 
                             "Semester ".$t->semester." - ".$t->tahun_ajaran,
-                            $t->image, 
+                            isset($t->image), 
                             [
                                 new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
                                 new MessageTemplateActionBuilder("Lihat Tugas", "Lihat Tugas ".$t->id_matkul),
