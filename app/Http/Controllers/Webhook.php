@@ -98,7 +98,7 @@ class Webhook extends Controller {
     private function handleEvents()
     {
         $data = $this->request->all();
-    
+        
         if(is_array($data['events'])){
             foreach ($data['events'] as $event)
             {
@@ -169,7 +169,7 @@ class Webhook extends Controller {
     private function greetingMessage($eventId) {
         $getprofile = $this->bot->getProfile($eventId);
         $profile = $getprofile->getJSONDecodedBody();
-        $message = "Halo, " . $getprofile . "!\n";
+        $message = "Halo, " . implode('|', $getprofile) . "!\n";
         $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
         
 
