@@ -106,12 +106,12 @@ class Webhook extends Controller {
                 
                 if($event['source']['type'] == 'group') {
                     if($event['type'] == 'join') {
-                        $this->greetingMessage($event['source']['groupId']);
+                        $this->greetingMessage($event);
                     } else {
                         $this->handleOneOnOneChats();
                     }
                 } else if($event['source']['type'] == 'room') {
-                    $this->greetingMessage($event['source']['groupId']);
+                    $this->greetingMessage($event);
                     $this->user = $this->userGateway->getUser($event['source']['userId']);
                     
                     $this->handleOneOnOneChats();
@@ -146,8 +146,12 @@ class Webhook extends Controller {
         }
     }
 
-    private function greetingMessage($eventId) {
-        $getprofile = $this->bot->getProfile($eventId);
+    private function greetingMessage($event) {
+        if($event['source']['type'] == 'room') { 
+            $getprofile = $this->bot->getProfile($event['source']['roomId']);
+        } else {
+            $getprofile = $this->bot->getProfile($event['source']['groupId']);
+        }
         $profile = $getprofile->getJSONDecodedBody();
         $message = "Halo, " . "!\n";
         $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
