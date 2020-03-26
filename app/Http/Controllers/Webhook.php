@@ -327,6 +327,10 @@ class Webhook extends Controller {
                 $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
 
             }
-        } 
+        } else {
+            $message = "Keyword yg anda masukkan ". $this->user['state'];
+            $textMessageBuilder = new TextMessageBuilder($message);
+            $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+        }
     }
 }
