@@ -108,17 +108,17 @@ class Webhook extends Controller {
                     if($event['type'] == 'join') {
                         $this->greetingMessage($event['source']['groupId']);
                     } else {
-                        handleOneOnOneChats();
+                        $this->handleOneOnOneChats();
                     }
                 } else if($event['source']['type'] == 'room') {
                     $this->greetingMessage($event['source']['groupId']);
                     $this->user = $this->userGateway->getUser($event['source']['userId']);
                     
-                    handleOneOnOneChats();
+                    $this->handleOneOnOneChats();
                 } else {
                     $this->user = $this->userGateway->getUser($event['source']['userId']);
                     
-                    handleOneOnOneChats();
+                    $this->handleOneOnOneChats();
                 }
     
             }
