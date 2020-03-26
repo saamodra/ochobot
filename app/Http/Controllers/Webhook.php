@@ -108,7 +108,11 @@ class Webhook extends Controller {
                     if($event['type'] == 'join') {
                         $this->greetingMessage($event);
                     } else {
-                        $this->handleOneOnOneChats($event);
+                        $getprofile = $this->bot->getProfile($data['source']['userId']);
+                        $profile = $getprofile->JSONDecodedBody();
+                        $message = 'Halo, ' . $profile['displayName'];
+                        $textMessageBuilder = new TextMessageBuilder($message);
+                        $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
                     }
                 } else if($event['source']['type'] == 'room') {
                     $this->greetingMessage($event);
