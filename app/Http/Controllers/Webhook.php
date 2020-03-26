@@ -108,7 +108,7 @@ class Webhook extends Controller {
                     if($event['type'] == 'join') {
                         $this->greetingMessage($event);
                     } else {
-                        $getprofile = $this->bot->getProfile($data['source']['userId']);
+                        $getprofile = $this->bot->getProfile($event['source']['userId']);
                         $profile = $getprofile->JSONDecodedBody();
                         $message = 'Halo, ' . $profile['displayName'];
                         $textMessageBuilder = new TextMessageBuilder($message);
