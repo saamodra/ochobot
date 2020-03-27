@@ -108,7 +108,7 @@ class Webhook extends Controller {
                     if($event['type'] == 'join') {
                         $this->greetingMessage($event);
                     } else if($event['type'] == 'leave') {
-                        $this->leaveCallback($event);
+                        
                     }else {
                         // $getprofile = $this->bot->getProfile($event['source']['userId']);
                         // $profile = $getprofile->getJSONDecodedBody();
@@ -176,9 +176,6 @@ class Webhook extends Controller {
         $multiMesssageBuilder->add($stickerMessageBuilder);
         $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
         $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
-
-
-        $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
     }
 
     private function groupMessage($event) {
@@ -214,12 +211,19 @@ class Webhook extends Controller {
             $multiMesssageBuilder->add($textMessageBuilder);
             
             $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
+        } else {
+            $textMessageBuilder = new TextMessageBuilder("Keyword salah yya!");
+            $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
         }
     }
 
     private function leaveCallback($event) {
-        $res = $this->bot->getProfile($event['source']['userId']);
+        // $res = $this->bot->getProfile($event['source']['userId']);
 
+    }
+
+    private function unfollowCallback($event) {
+        $this->userGateway->setUserState($this->user['user_id'], 0);
     }
 
     private function followCallback($event) {
