@@ -107,7 +107,7 @@ class Webhook extends Controller {
                 if($event['source']['type'] == 'group') {
                     if($event['type'] == 'join') {
                         $this->greetingMessage($event);
-                    } else if($event['type'] == 'join') {
+                    } else if($event['type'] == 'leave') {
                         $this->leaveCallback($event);
                     }else {
                         // $getprofile = $this->bot->getProfile($event['source']['userId']);
@@ -164,18 +164,19 @@ class Webhook extends Controller {
             $message,
             null,
             [
-                new MessageTemplateActionBuilder("Lihat Tugas", "Ochobot Lihat Tugas"), 
+                new MessageTemplateActionBuilder("Lihat Tugas", "Ochobot Lihat Tugas")
             ]
         );
 
-
-        //create sticker message
-        $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002768);
+        
+        $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626501);
 
         // merge all message
         $multiMesssageBuilder = new MultiMessageBuilder();
         $multiMesssageBuilder->add($stickerMessageBuilder);
         $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
+        $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
+
 
         $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
     }
@@ -202,10 +203,12 @@ class Webhook extends Controller {
             $templateMessage = new TemplateMessageBuilder('Tugas '.date('d-m-Y'), $carouselTugas);
             $this->bot->replyMessage($event['replyToken'], $templateMessage);
         } else if(strtolower($userMessage) == "terima kasih ochobot") {
+            $result = $this->bot->getProfile($event['source']['userId']);
+            $profile = $result->getJSONDecodedBody();
             $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626501);
 
             // merge all message
-            $textMessageBuilder = new TextMessageBuilder("Iya, sama-sama!");
+            $textMessageBuilder = new TextMessageBuilder("Iya, sama-sama ".$profile['displayName']."!");
             $multiMesssageBuilder = new MultiMessageBuilder();
             $multiMesssageBuilder->add($stickerMessageBuilder);
             $multiMesssageBuilder->add($textMessageBuilder);
@@ -286,9 +289,8 @@ class Webhook extends Controller {
                 $templateMessage = new TemplateMessageBuilder('Daftar Matkul', $carouselMatkul);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "tugas") {
-                $matkul = "";
+                // $matkul = "";
                 foreach($this->tugasGateway->getAllTugas() as $t) {
-                    $matkul = $t->nama_matkul;
                     $tugas[] = new CarouselColumnTemplateBuilder(
                             $t->judul, 
                             $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
@@ -304,7 +306,7 @@ class Webhook extends Controller {
                 $this->userGateway->setUserState($this->user['user_id'], 1);
                 $carouselTugas = new CarouselTemplateBuilder($tugas);
 
-                $templateMessage = new TemplateMessageBuilder('Tugas '.$matkul, $carouselTugas);
+                $templateMessage = new TemplateMessageBuilder('Tugas', $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else {
                 $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Semua Tugas" untuk melihat semua tugas.';
@@ -330,7 +332,7 @@ class Webhook extends Controller {
                             [
                                 new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
                                 new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                                new MessageTemplateActionBuilder("Terima Kasih Ochobot!", "Terima Kasih Ochobot!"),
+                                new MessageTemplateActionBuilder("Terima Kasih Ochobot!", "Terima Kasih Ochobot!")
                             ]
                         );
                 
