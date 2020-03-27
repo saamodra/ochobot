@@ -355,7 +355,7 @@ class Webhook extends Controller {
                 $this->CarouselTugas($event, $this->tugasGateway->getAllTugas());
             } else {
                 if($this->user['thx'] == 1) {
-                    $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Semua Tugas" untuk melihat semua tugas, okay?';
+                    $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Tugas" untuk melihat semua tugas, okay?';
                     $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002735);
 
                     $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
@@ -406,7 +406,7 @@ class Webhook extends Controller {
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626530);
     
                     // merge all message
-                    $this->sendMsgSticker($event, $sticker, $message);
+                    $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
                 } else {
                     $message = "Makasihnya manaaa!";
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
@@ -419,7 +419,7 @@ class Webhook extends Controller {
             $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626530);
 
             // merge all message
-            $this->sendMsgSticker($event, $sticker, $message);
+            $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
         }
     }
 }
