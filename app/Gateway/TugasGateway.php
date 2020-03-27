@@ -58,6 +58,14 @@ class TugasGateway {
         return null;
     }
 
+    public function getNamaMatkul($matkulId) {
+        $nama = $this->db->table('matkul')
+        ->where('id_matkul', $matkulId)
+        ->first();
+
+        return $nama->nama_matkul;
+    }
+
     public function datedifference($date1) {
         date_default_timezone_set('Asia/Jakarta');
 

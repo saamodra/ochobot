@@ -25,7 +25,7 @@ class ExampleController extends Controller
             ->get();
  
         if ($tugas) {
-            return $tugas;
+            return $tugas->judul;
         }
  
         return null;
