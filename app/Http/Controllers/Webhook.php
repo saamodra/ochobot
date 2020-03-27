@@ -110,11 +110,6 @@ class Webhook extends Controller {
                     } else if($event['type'] == 'leave') {
                         
                     }else {
-                        // $getprofile = $this->bot->getProfile($event['source']['userId']);
-                        // $profile = $getprofile->getJSONDecodedBody();
-                        // $message = 'Halo, ' . $profile['displayName'];
-                        // $textMessageBuilder = new TextMessageBuilder($message);
-                        // $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
                         $this->groupMessage($event);
                         
                     }
@@ -180,7 +175,7 @@ class Webhook extends Controller {
         if(strtolower($userMessage) == "ochobot lihat tugas") {
             foreach($this->tugasGateway->getAllTugas() as $t) {
                 $tugas[] = new CarouselColumnTemplateBuilder(
-                    $t->judul.' - '.$t->nama_matkul, 
+                    $t->judul, 
                     "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
                     $t->image, 
                     [
@@ -286,7 +281,7 @@ class Webhook extends Controller {
                 
                 foreach($this->tugasGateway->getAllTugas() as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
-                        $t->judul.' - '.$t->nama_matkul, 
+                        $t->judul,
                         "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
                         $t->image, 
                         [
@@ -317,7 +312,7 @@ class Webhook extends Controller {
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
     
                     // merge all message
-                    $message = "Makasihnya manaaa!'";
+                    $message = "Makasihnya manaaa!";
                     $textMessageBuilder = new TextMessageBuilder($message);
                     $multiMesssageBuilder = new MultiMessageBuilder();
                     $multiMesssageBuilder->add($stickerMessageBuilder);
@@ -336,7 +331,7 @@ class Webhook extends Controller {
                 
                 foreach($this->tugasGateway->getTugasMatkul(intval($idMatkul)) as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
-                        $t->judul.' - '.$t->nama_matkul, 
+                        $t->judul, 
                         "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
                         $t->image, 
                         [
@@ -388,7 +383,7 @@ class Webhook extends Controller {
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
     
                     // merge all message
-                    $message = "Makasihnya manaaa!'";
+                    $message = "Makasihnya manaaa!";
                     $textMessageBuilder = new TextMessageBuilder($message);
                     $multiMesssageBuilder = new MultiMessageBuilder();
                     $multiMesssageBuilder->add($stickerMessageBuilder);
