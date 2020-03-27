@@ -414,7 +414,7 @@ class Webhook extends Controller {
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
                     // merge all message
                 }
-                $this->sendMsgSticker($sticker, $message);
+                $this->sendMsgSticker($stickerMessageBuilder, $message);
             }
         } else {
             $message = "Keyword yang anda masukkan salah!";
