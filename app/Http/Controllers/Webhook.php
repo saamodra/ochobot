@@ -186,7 +186,7 @@ class Webhook extends Controller {
                     [
                         new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
                         new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                        new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terima Kasih Ochobot"),
+                        new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terima Kasih Ochobot!"),
                     ]
                 );
             
@@ -196,7 +196,7 @@ class Webhook extends Controller {
     
             $templateMessage = new TemplateMessageBuilder('Tugas '.date('d-m-Y'), $carouselTugas);
             $this->bot->replyMessage($event['replyToken'], $templateMessage);
-        } else if(strtolower($userMessage) == "terima kasih ochobot") {
+        } else if(strtolower($userMessage) == "terima kasih ochobot!") {
             $result = $this->bot->getProfile($event['source']['userId']);
             $profile = $result->getJSONDecodedBody();
             $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626501);
@@ -327,23 +327,22 @@ class Webhook extends Controller {
                 
                 // $this->bot->replyMessage($event['replyToken'], $matkul);
                 foreach($this->tugasGateway->getTugasMatkul(intval($idMatkul)) as $t) {
-                    // $matkul = $t->nama_matkul;
                     $tugas[] = new CarouselColumnTemplateBuilder(
-                            $t->judul, 
-                            $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
-                            $t->image, 
-                            [
-                                new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
-                                new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                                new MessageTemplateActionBuilder("Terima Kasih Ochobot!", "Terima Kasih Ochobot!")
-                            ]
-                        );
+                        $t->judul, 
+                        $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
+                        $t->image, 
+                        [
+                            new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
+                            new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
+                            new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terima Kasih Ochobot!"),
+                        ]
+                    );
                 
                 }
-
+        
                 $carouselTugas = new CarouselTemplateBuilder($tugas);
-
-                $templateMessage = new TemplateMessageBuilder('Tugas', $carouselTugas);
+        
+                $templateMessage = new TemplateMessageBuilder('Tugas '.date('d-m-Y'), $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "terima kasih ochobot!") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
