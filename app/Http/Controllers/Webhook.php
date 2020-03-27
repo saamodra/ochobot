@@ -325,7 +325,7 @@ class Webhook extends Controller {
                 $tugas = array();
                 $matkul = "";
                 
-                foreach($this->tugasGateway->getTugasMatkul($idMatkul) as $t) {
+                foreach($this->tugasGateway->getTugasMatkul(intval($idMatkul)) as $t) {
                     $matkul = $t->nama_matkul;
                     $tugas[] = new CarouselColumnTemplateBuilder(
                             $t->judul, 
