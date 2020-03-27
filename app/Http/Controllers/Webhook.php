@@ -347,7 +347,7 @@ class Webhook extends Controller {
                 
                 $carouselMatkul = new CarouselTemplateBuilder($matkul);
                 $this->userGateway->setUserState($this->user['user_id'], 1);
-                $this->userGateway->setThxState($this->user['user_id'], 0);
+                
                 $templateMessage = new TemplateMessageBuilder('Daftar Matkul', $carouselMatkul);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "tugas") {
@@ -356,7 +356,7 @@ class Webhook extends Controller {
             } else {
                 if($this->user['thx'] == 1) {
                     $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Semua Tugas" untuk melihat semua tugas, okay?';
-                    $stickerMessageBuilder = new StickerMessageBuilder(11538, 52002735);
+                    $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002735);
 
                     $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
                 } else {
