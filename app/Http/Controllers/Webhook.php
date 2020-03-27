@@ -388,6 +388,9 @@ class Webhook extends Controller {
             } else if(strtolower($userMessage) == "terimakasih ochobot!") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
                 $this->userGateway->setThxState($this->user['user_id'], 1);
+
+                $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626501);
+
                 $message = "Apakah ada lagi yang bisa Ochobot lakukan?";
                 $buttonsTemplate = new ButtonTemplateBuilder(
                     null,
@@ -398,10 +401,10 @@ class Webhook extends Controller {
                         new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
                     ]
                 );
-                
-                $this->sendButtonMsg($event, new TemplateMessageBuilder('Terima kasih', $buttonsTemplate), $message);
-                
-                
+
+
+                $this->sendButtonSticker($event, $stickerMessageBuilder, $buttonsTemplate);
+
             } else {
                 if($this->user['thx'] == 1) {
                     $message = "Keyword yg anda masukkan salah! Silahkan kirim pesan \"Lihat Tugas <ID Matkul>\" untuk melihat tugas.'";
