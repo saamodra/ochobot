@@ -155,16 +155,14 @@ class Webhook extends Controller {
     }
 
     private function greetingMessage($event) {
-        $message = "Halo, Semua!\n";
-        $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
-        
-
+        $message = "Apakah ada lagi yang bisa Ochobot lakukan?";
         $buttonsTemplate = new ButtonTemplateBuilder(
             null,
             $message,
             null,
             [
-                new MessageTemplateActionBuilder("Lihat Tugas", "Ochobot Lihat Tugas")
+                new MessageTemplateActionBuilder("Mata Kuliah", "Mata Kuliah"), 
+                new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
             ]
         );
 
