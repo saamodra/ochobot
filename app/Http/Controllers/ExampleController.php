@@ -39,4 +39,6 @@ class ExampleController extends Controller
 
         return null;
     }
+
+    
 }

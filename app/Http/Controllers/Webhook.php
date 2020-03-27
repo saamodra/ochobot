@@ -186,7 +186,7 @@ class Webhook extends Controller {
                     [
                         new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
                         new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                        new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terima Kasih Ochobot!"),
+                        new MessageTemplateActionBuilder("Terimakasih Ochobot", "Terimakasih Ochobot!"),
                     ]
                 );
             
@@ -196,7 +196,7 @@ class Webhook extends Controller {
     
             $templateMessage = new TemplateMessageBuilder('Tugas '.date('d-m-Y'), $carouselTugas);
             $this->bot->replyMessage($event['replyToken'], $templateMessage);
-        } else if(strtolower($userMessage) == "terima kasih ochobot!") {
+        } else if(strtolower($userMessage) == "terimakasih ochobot!") {
             $result = $this->bot->getProfile($event['source']['userId']);
             $profile = $result->getJSONDecodedBody();
             $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626501);
@@ -209,7 +209,7 @@ class Webhook extends Controller {
             
             $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
         } else {
-            $textMessageBuilder = new TextMessageBuilder("Keyword salah yya!");
+            $textMessageBuilder = new TextMessageBuilder("Keyword salah ya!");
             $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
         }
     }
@@ -227,13 +227,10 @@ class Webhook extends Controller {
         $res = $this->bot->getProfile($event['source']['userId']);
         if($res->isSucceeded()) {
             $profile = $res->getJSONDecodedBody();
-
-            //create welcome message
-            $message = "Salam kenal, " . $profile['displayName'] . "!\n";
-            $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
-            $textMessageBuilder = new TextMessageBuilder($message);
             
-    
+            
+            //create welcome message
+            $message = "Salam kenal, " . $profile['displayName'] . "!\nHai, semua! Ochobot bisa menampilkan tugas-tugas SI 19 lho. Tekan tombol \"Mata Kuliah\" untuk melihat daftar mata kuliah dan tekan tombol \"Lihat Tugas\" untuk melihat daftar tugas hari ini.";
             $buttonsTemplate = new ButtonTemplateBuilder(
                 null,
                 $message,
@@ -244,15 +241,13 @@ class Webhook extends Controller {
                 ]
             );
 
-
-            //create sticker message
+            
             $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002768);
 
             // merge all message
             $multiMesssageBuilder = new MultiMessageBuilder();
             $multiMesssageBuilder->add($stickerMessageBuilder);
             $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
-
 
             // send reply message
             $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
@@ -294,12 +289,13 @@ class Webhook extends Controller {
                 foreach($this->tugasGateway->getAllTugas() as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
                         $t->judul, 
-                        $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
+                        $t->nama_matkul." - Semester ". $t->semester."\nDue Date : ".date('d-m-Y h:i', strtotime($t->tahun_ajaran)).
+                        "\nWaktu Kurang : ".$this->tugasGateway->datedifference(strtotime($t->tahun_ajaran)),
                         $t->image, 
                         [
                             new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
                             new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                            new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terima Kasih Ochobot!"),
+                            new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
                         ]
                     );
                 
@@ -334,7 +330,7 @@ class Webhook extends Controller {
                         [
                             new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
                             new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                            new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terima Kasih Ochobot!"),
+                            new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
                         ]
                     );
                 
@@ -344,7 +340,7 @@ class Webhook extends Controller {
         
                 $templateMessage = new TemplateMessageBuilder('Tugas '.date('d-m-Y'), $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
-            } else if(strtolower($userMessage) == "terima kasih ochobot!") {
+            } else if(strtolower($userMessage) == "terimakasih ochobot!") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
                 $message = "Apakah ada lagi yang bisa Ochobot lakukan?";
                 $buttonsTemplate = new ButtonTemplateBuilder(
@@ -382,7 +378,7 @@ class Webhook extends Controller {
             $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626530);
 
             // merge all message
-            $message = "Keyword yg anda masukkan salah!";
+            $message = "Keyword yang anda masukkan salah!";
             $textMessageBuilder = new TextMessageBuilder($message);
             $multiMesssageBuilder = new MultiMessageBuilder();
             $multiMesssageBuilder->add($stickerMessageBuilder);
