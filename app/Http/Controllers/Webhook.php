@@ -240,9 +240,8 @@ class Webhook extends Controller {
         if($res->isSucceeded()) {
             $profile = $res->getJSONDecodedBody();
             
-            
             //create welcome message
-            $message = "Salam kenal, " . $profile['displayName'] . "!\nHai, semua! Ochobot bisa menampilkan tugas-tugas SI 19 lho. Tekan tombol \"Mata Kuliah\" untuk melihat daftar mata kuliah dan tekan tombol \"Lihat Tugas\" untuk melihat daftar tugas hari ini.";
+            $message = "Salam kenal, " . $profile['displayName'] . "!\n. Tekan tombol \"Mata Kuliah\" untuk melihat daftar mata kuliah dan tekan tombol \"Lihat Tugas\" untuk melihat daftar tugas hari ini.";
             $buttonsTemplate = new ButtonTemplateBuilder(
                 null,
                 $message,
@@ -256,11 +255,7 @@ class Webhook extends Controller {
             
             $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002738);
     
-            // merge all message
-            $multiMesssageBuilder = new MultiMessageBuilder();
-            $multiMesssageBuilder->add($stickerMessageBuilder);
-            $multiMesssageBuilder->add(new TemplateMessageBuilder('Tugas', $buttonsTemplate));
-            $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
+            $this->sendButtonSticker($event, $stickerMessageBuilder, $buttonsTemplate);
 
             // save user data
             $this->userGateway->saveUser(
