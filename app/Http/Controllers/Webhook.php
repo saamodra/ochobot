@@ -168,8 +168,7 @@ class Webhook extends Controller {
             $message,
             null,
             [
-                new MessageTemplateActionBuilder("Mata Kuliah", "Mata Kuliah"), 
-                new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
+                new MessageTemplateActionBuilder("Lihat Tugas", "Ochobot Lihat Tugas"), 
             ]
         );
 
@@ -196,6 +195,7 @@ class Webhook extends Controller {
                     [
                         new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
                         new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
+                        new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terima Kasih Ochobot"),
                     ]
                 );
             
@@ -205,6 +205,16 @@ class Webhook extends Controller {
     
             $templateMessage = new TemplateMessageBuilder('Tugas '.date('d-m-Y'), $carouselTugas);
             $this->bot->replyMessage($event['replyToken'], $templateMessage);
+        } else if(strtolower($userMessage) == "terima kasih ochobot") {
+            $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626501);
+
+            // merge all message
+            $textMessageBuilder = new TextMessageBuilder("Iya, sama-sama!");
+            $multiMesssageBuilder = new MultiMessageBuilder();
+            $multiMesssageBuilder->add($stickerMessageBuilder);
+            $multiMesssageBuilder->add($textMessageBuilder);
+            
+            $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
         }
     }
 
@@ -277,7 +287,7 @@ class Webhook extends Controller {
                 $carouselMatkul = new CarouselTemplateBuilder($matkul);
                 $this->userGateway->setUserState($this->user['user_id'], 1);
 
-                $templateMessage = new TemplateMessageBuilder('CarouselMatkul', $carouselMatkul);
+                $templateMessage = new TemplateMessageBuilder('Daftar Matkul', $carouselMatkul);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "tugas") {
                 $matkul = "";
@@ -324,7 +334,7 @@ class Webhook extends Controller {
                             [
                                 new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
                                 new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                                new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terima Kasih Ochobot"),
+                                new MessageTemplateActionBuilder("Terima Kasih Ochobot!", "Terima Kasih Ochobot!"),
                             ]
                         );
                 
@@ -334,7 +344,7 @@ class Webhook extends Controller {
 
                 $templateMessage = new TemplateMessageBuilder('Tugas '.$matkul, $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
-            } else if(strtolower($userMessage) == "terima kasih ochobot") {
+            } else if(strtolower($userMessage) == "terima kasih ochobot!") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
                 $message = "Apakah ada lagi yang bisa Ochobot lakukan?";
                 $buttonsTemplate = new ButtonTemplateBuilder(
