@@ -241,7 +241,7 @@ class Webhook extends Controller {
             $profile = $res->getJSONDecodedBody();
             
             //create welcome message
-            $message = "Salam kenal, " . $profile['displayName'] . "!\n. Tekan tombol \"Mata Kuliah\" untuk melihat daftar mata kuliah dan tekan tombol \"Lihat Tugas\" untuk melihat daftar tugas hari ini.";
+            $message = "Salam kenal, " . $profile['displayName'] . "!\nTekan tombol \"Mata Kuliah\" untuk melihat daftar mata kuliah dan tekan tombol \"Lihat Tugas\" untuk melihat daftar tugas hari ini.";
             $buttonsTemplate = new ButtonTemplateBuilder(
                 null,
                 $message,
