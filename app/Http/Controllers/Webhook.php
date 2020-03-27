@@ -107,7 +107,9 @@ class Webhook extends Controller {
                 if($event['source']['type'] == 'group') {
                     if($event['type'] == 'join') {
                         $this->greetingMessage($event);
-                    } else {
+                    } else if($event['type'] == 'join') {
+                        $this->leaveCallback($event);
+                    }else {
                         // $getprofile = $this->bot->getProfile($event['source']['userId']);
                         // $profile = $getprofile->getJSONDecodedBody();
                         // $message = 'Halo, ' . $profile['displayName'];
@@ -153,12 +155,6 @@ class Webhook extends Controller {
     }
 
     private function greetingMessage($event) {
-        if($event['source']['type'] == 'room') { 
-            $getprofile = $this->bot->getProfile($event['source']['roomId']);
-        } else {
-            $getprofile = $this->bot->getProfile($event['source']['groupId']);
-        }
-        $profile = $getprofile->getJSONDecodedBody();
         $message = "Halo, Semua!\n";
         $message .= "Ochobot bisa menampilkan tugas-tugas SI 19 lho. Coba tekan tombol \"Mata Kuliah\" untuk melihat mata kuliah dan \"Semua Tugas\" untuk melihat semua tugas.";
         
@@ -181,7 +177,7 @@ class Webhook extends Controller {
         $multiMesssageBuilder->add($stickerMessageBuilder);
         $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
 
-        $result = $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
+        $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
     }
 
     private function groupMessage($event) {
