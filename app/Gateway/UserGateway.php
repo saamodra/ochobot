@@ -27,11 +27,17 @@ class UserGateway {
     }
 
     public function saveUser(string $userId, string $displayName) {
-        $this->db->table('users')
-        ->insert([
-            'user_id' => $userId,
-            'display_name' => $displayName
-        ]);
+        $result = $this->db->table('users')
+        ->where('user_id', $userId)
+        ->count();
+
+        if($result == 0) {
+            $this->db->table('users')
+            ->insert([
+                'user_id' => $userId,
+                'display_name' => $displayName
+            ]);
+        }
     }
 
     function setUserState(string $userId, int $userState)
@@ -39,6 +45,15 @@ class UserGateway {
         $this->db->table('users')
             ->update([
                 'state' => $userState,
+                'user_id' => $userId
+            ]);
+    }
+
+    function setThxState(string $userId, int $userState)
+    {
+        $this->db->table('users')
+            ->update([
+                'thx' => $userState,
                 'user_id' => $userId
             ]);
     }

@@ -21,10 +21,11 @@ class ExampleController extends Controller
             ->where('tugas.id_matkul', $matkulId)
             ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
             ->join('matkul', 'matkul.id_matkul', 'tugas.id_matkul')
+            ->orderBy('due_date')
             ->get();
  
         if ($tugas) {
-            return $this->datedifference(strtotime($tugas[0]->due_date));
+            return $tugas;
         }
  
         return null;

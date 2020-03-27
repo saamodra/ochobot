@@ -166,7 +166,7 @@ class Webhook extends Controller {
         );
 
         
-        $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626501);
+        $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002738);
 
         // merge all message
         $multiMesssageBuilder = new MultiMessageBuilder();
@@ -180,8 +180,8 @@ class Webhook extends Controller {
         if(strtolower($userMessage) == "ochobot lihat tugas") {
             foreach($this->tugasGateway->getAllTugas() as $t) {
                 $tugas[] = new CarouselColumnTemplateBuilder(
-                    $t->judul, 
-                    $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
+                    $t->judul.' - '.$t->nama_matkul, 
+                    "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
                     $t->image, 
                     [
                         new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
@@ -240,16 +240,14 @@ class Webhook extends Controller {
                     new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
                 ]
             );
-
+    
             
-            $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002768);
-
+            $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002738);
+    
             // merge all message
             $multiMesssageBuilder = new MultiMessageBuilder();
             $multiMesssageBuilder->add($stickerMessageBuilder);
             $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
-
-            // send reply message
             $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
 
             // save user data
@@ -281,11 +279,11 @@ class Webhook extends Controller {
                 
                 $carouselMatkul = new CarouselTemplateBuilder($matkul);
                 $this->userGateway->setUserState($this->user['user_id'], 1);
-
+                $this->userGateway->setThxState($this->user['user_id'], 0);
                 $templateMessage = new TemplateMessageBuilder('Daftar Matkul', $carouselMatkul);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "tugas") {
-                // $matkul = "";
+                
                 foreach($this->tugasGateway->getAllTugas() as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
                         $t->judul.' - '.$t->nama_matkul, 
@@ -304,11 +302,28 @@ class Webhook extends Controller {
         
                 $templateMessage = new TemplateMessageBuilder('Tugas '.date('d-m-Y'), $carouselTugas);
                 $this->userGateway->setUserState($this->user['user_id'], 1);
+                $this->userGateway->setThxState($this->user['user_id'], 0);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else {
-                $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Semua Tugas" untuk melihat semua tugas.';
-                $textMessageBuilder = new TextMessageBuilder($message);
-                $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+                if($this->user['thx'] == 1) {
+                    $stickerMessageBuilder = new StickerMessageBuilder(11538, 52002735);
+
+                    $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Semua Tugas" untuk melihat semua tugas, okay?';
+                    $textMessageBuilder = new TextMessageBuilder($message);
+                    $multiMesssageBuilder = new MultiMessageBuilder();
+                    $multiMesssageBuilder->add($stickerMessageBuilder);
+                    $multiMesssageBuilder->add($textMessageBuilder);
+                } else {
+                    $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
+    
+                    // merge all message
+                    $message = "Makasihnya manaaa!'";
+                    $textMessageBuilder = new TextMessageBuilder($message);
+                    $multiMesssageBuilder = new MultiMessageBuilder();
+                    $multiMesssageBuilder->add($stickerMessageBuilder);
+                    $multiMesssageBuilder->add($textMessageBuilder);
+                }
+                $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
 
             }
 
@@ -318,9 +333,7 @@ class Webhook extends Controller {
                 $msg = explode(" ", $userMessage);
                 $idMatkul = end($msg);
                 $tugas = array();
-                // $matkul = new TextMessageBuilder($idMatkul);
                 
-                // $this->bot->replyMessage($event['replyToken'], $matkul);
                 foreach($this->tugasGateway->getTugasMatkul(intval($idMatkul)) as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
                         $t->judul.' - '.$t->nama_matkul, 
@@ -334,13 +347,14 @@ class Webhook extends Controller {
                     );
                 
                 }
-        
+                
                 $carouselTugas = new CarouselTemplateBuilder($tugas);
-        
+                $this->userGateway->setThxState($this->user['user_id'], 0);
                 $templateMessage = new TemplateMessageBuilder('Tugas '.date('d-m-Y'), $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "terimakasih ochobot!") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
+                $this->userGateway->setThxState($this->user['user_id'], 1);
                 $message = "Apakah ada lagi yang bisa Ochobot lakukan?";
                 $buttonsTemplate = new ButtonTemplateBuilder(
                     null,
@@ -361,17 +375,26 @@ class Webhook extends Controller {
                 $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
                 $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
             } else {
-                $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626530);
-
-                // merge all message
-                
-                $message = "Keyword yg anda masukkan salah! Silahkan kirim pesan \"Lihat Tugas <ID Matkul>\" untuk melihat tugas.'";
-                $textMessageBuilder = new TextMessageBuilder($message);
-                $multiMesssageBuilder = new MultiMessageBuilder();
-                $multiMesssageBuilder->add($stickerMessageBuilder);
-                $multiMesssageBuilder->add($textMessageBuilder);
+                if($this->user['thx'] == 1) {
+                    $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626530);
+    
+                    // merge all message
+                    $message = "Keyword yg anda masukkan salah! Silahkan kirim pesan \"Lihat Tugas <ID Matkul>\" untuk melihat tugas.'";
+                    $textMessageBuilder = new TextMessageBuilder($message);
+                    $multiMesssageBuilder = new MultiMessageBuilder();
+                    $multiMesssageBuilder->add($stickerMessageBuilder);
+                    $multiMesssageBuilder->add($textMessageBuilder);
+                } else {
+                    $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
+    
+                    // merge all message
+                    $message = "Makasihnya manaaa!'";
+                    $textMessageBuilder = new TextMessageBuilder($message);
+                    $multiMesssageBuilder = new MultiMessageBuilder();
+                    $multiMesssageBuilder->add($stickerMessageBuilder);
+                    $multiMesssageBuilder->add($textMessageBuilder);
+                }
                 $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
-
             }
         } else {
             $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626530);

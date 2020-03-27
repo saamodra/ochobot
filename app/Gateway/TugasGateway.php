@@ -34,6 +34,7 @@ class TugasGateway {
             ->where('tugas.id_matkul', $matkulId)
             ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
             ->join('matkul', 'matkul.id_matkul', 'tugas.id_matkul')
+            ->orderBy('due_date')
             ->get();
 
         if($tugas) {
@@ -47,6 +48,7 @@ class TugasGateway {
         $tugas = $this->db->table('tugas')
         ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
         ->join('matkul', 'matkul.id_matkul', 'tugas.id_matkul')
+        ->orderBy('due_date')
         ->get();
 
         if($tugas) {
