@@ -270,7 +270,7 @@ class Webhook extends Controller {
         }
     }
 
-    private function CarouselTugas($arrTugas, $matkul = null) {
+    private function CarouselTugas($event, $arrTugas, $matkul = null) {
         foreach($arrTugas as $t) {
             $tugas[] = new CarouselColumnTemplateBuilder(
                 $t->judul,
@@ -309,7 +309,7 @@ class Webhook extends Controller {
         $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
     }
 
-    private function sendMsgSticker($sticker, $message) {
+    private function sendMsgSticker($event, $event, $sticker, $message) {
         $textMessageBuilder = new TextMessageBuilder($message);
         $multiMesssageBuilder = new MultiMessageBuilder();
         $multiMesssageBuilder->add($sticker);
@@ -317,7 +317,7 @@ class Webhook extends Controller {
         $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
     }
 
-    private function sendButtonSticker($sticker, $button) {
+    private function sendButtonSticker($event, $sticker, $button) {
         // merge all message
         $multiMesssageBuilder = new MultiMessageBuilder();
         $multiMesssageBuilder->add($sticker);
@@ -325,7 +325,7 @@ class Webhook extends Controller {
         $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
     }
 
-    private function sendButtonMsg($button, $msg) {
+    private function sendButtonMsg($event, $button, $msg) {
         $textMessageBuilder = new TextMessageBuilder($msg);
         $multiMesssageBuilder = new MultiMessageBuilder();
         $multiMesssageBuilder->add($textMessageBuilder);
@@ -357,19 +357,19 @@ class Webhook extends Controller {
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "tugas") {
                 $this->userGateway->setUserState($this->user['user_id'], 1);
-                $this->CarouselTugas($this->tugasGateway->getAllTugas());
+                $this->CarouselTugas($event, $this->tugasGateway->getAllTugas());
             } else {
                 if($this->user['thx'] == 1) {
                     $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Semua Tugas" untuk melihat semua tugas, okay?';
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 52002735);
 
-                    $this->sendMsgSticker($stickerMessageBuilder, $message);
+                    $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
                 } else {
                     $message = "Makasihnya manaaa!";
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
     
                     // merge all message
-                    $this->sendMsgSticker($stickerMessageBuilder, $message);
+                    $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
                 }
                 
 
@@ -383,7 +383,7 @@ class Webhook extends Controller {
                 $tugas = array();
                 $matkul = $this->tugasGateway->getNamaMatkul($idMatkul);
 
-                $this->CarouselTugas($this->tugasGateway->getTugasMatkul(intval($idMatkul)), $matkul);
+                $this->CarouselTugas($event, $this->tugasGateway->getTugasMatkul(intval($idMatkul)), $matkul);
                 
             } else if(strtolower($userMessage) == "terimakasih ochobot!") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
@@ -399,7 +399,7 @@ class Webhook extends Controller {
                     ]
                 );
                 
-                $this->sendButtonMsg(new TemplateMessageBuilder('Terima kasih', $buttonsTemplate), $message);
+                $this->sendButtonMsg($event, new TemplateMessageBuilder('Terima kasih', $buttonsTemplate), $message);
                 
                 
             } else {
@@ -408,20 +408,20 @@ class Webhook extends Controller {
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626530);
     
                     // merge all message
-                    $this->sendMsgSticker($sticker, $message);
+                    $this->sendMsgSticker($event, $sticker, $message);
                 } else {
                     $message = "Makasihnya manaaa!";
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
                     // merge all message
                 }
-                $this->sendMsgSticker($stickerMessageBuilder, $message);
+                $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
             }
         } else {
             $message = "Keyword yang anda masukkan salah!";
             $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626530);
 
             // merge all message
-            $this->sendMsgSticker($sticker, $message);
+            $this->sendMsgSticker($event, $sticker, $message);
         }
     }
 }
