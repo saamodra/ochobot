@@ -200,7 +200,7 @@ class Webhook extends Controller {
                 );
                 $multiMesssageBuilder = new MultiMessageBuilder();
                 $multiMesssageBuilder->add($stickerMessageBuilder);
-                $multiMesssageBuilder->add($buttonsTemplate);
+                $multiMesssageBuilder->add(new TemplateMessageBuilder('Tugas', $buttonsTemplate));
             } else {
                 $carouselTugas = new CarouselTemplateBuilder($tugas);
         
@@ -259,7 +259,7 @@ class Webhook extends Controller {
             // merge all message
             $multiMesssageBuilder = new MultiMessageBuilder();
             $multiMesssageBuilder->add($stickerMessageBuilder);
-            $multiMesssageBuilder->add(new TemplateMessageBuilder('Home', $buttonsTemplate));
+            $multiMesssageBuilder->add(new TemplateMessageBuilder('Tugas', $buttonsTemplate));
             $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
 
             // save user data
@@ -322,7 +322,7 @@ class Webhook extends Controller {
                     );
                     $multiMesssageBuilder = new MultiMessageBuilder();
                     $multiMesssageBuilder->add($stickerMessageBuilder);
-                    $multiMesssageBuilder->add($buttonsTemplate);
+                    $multiMesssageBuilder->add(new TemplateMessageBuilder('Tugas', $buttonsTemplate));
                 } else {
                     $carouselTugas = new CarouselTemplateBuilder($tugas);
             
@@ -393,7 +393,7 @@ class Webhook extends Controller {
                     );
                     $multiMesssageBuilder = new MultiMessageBuilder();
                     $multiMesssageBuilder->add($stickerMessageBuilder);
-                    $multiMesssageBuilder->add($buttonsTemplate);
+                    $multiMesssageBuilder->add(new TemplateMessageBuilder('Tugas '.$matkul, $buttonsTemplate));
                 } else {
                     $carouselTugas = new CarouselTemplateBuilder($tugas);
                     
