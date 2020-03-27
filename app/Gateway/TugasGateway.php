@@ -73,7 +73,7 @@ class TugasGateway {
         
         $seconds = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60 - $minutes*60));  
         
-        return (($years != 0) ? $years." tahun " : "").(($months != 0) ? $months." bulan " : "").(($days != 0) ? $days." hari " : "")
-        .(($hours) ? $hours. " jam " : "").(($minutes) ? $minutes." menit ": "").(($seconds) ? $seconds." detik ": "");
+        return (($years != 0) ? $years."t " : "").(($months != 0) ? $months."b " : "").(($days != 0) ? $days."h " : "")
+        .(($hours != 0) ? $hours. "j " : "").(($minutes) ? $minutes."m ": "").(($minutes <= 1) ? $seconds."detik": "");
     }
 }

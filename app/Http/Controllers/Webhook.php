@@ -289,7 +289,7 @@ class Webhook extends Controller {
                 foreach($this->tugasGateway->getAllTugas() as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
                         $t->judul.' - '.$t->nama_matkul, 
-                        "Sisa waktu : ".$this->tugasGateway->datedifference(strtotime($t->due_date)),
+                        "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
                         $t->image, 
                         [
                             new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
@@ -323,8 +323,8 @@ class Webhook extends Controller {
                 // $this->bot->replyMessage($event['replyToken'], $matkul);
                 foreach($this->tugasGateway->getTugasMatkul(intval($idMatkul)) as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
-                        $t->judul, 
-                        $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
+                        $t->judul.' - '.$t->nama_matkul, 
+                        "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
                         $t->image, 
                         [
                             new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
@@ -365,7 +365,7 @@ class Webhook extends Controller {
 
                 // merge all message
                 
-                $message = "Keyword yg anda masukkan salah! Silahkan kirim pesan \"Lihat Tugas <ID Prodi>\" untuk melihat tugas.'";
+                $message = "Keyword yg anda masukkan salah! Silahkan kirim pesan \"Lihat Tugas <ID Matkul>\" untuk melihat tugas.'";
                 $textMessageBuilder = new TextMessageBuilder($message);
                 $multiMesssageBuilder = new MultiMessageBuilder();
                 $multiMesssageBuilder->add($stickerMessageBuilder);
