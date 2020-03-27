@@ -294,21 +294,21 @@ class Webhook extends Controller {
                 // $matkul = "";
                 foreach($this->tugasGateway->getAllTugas() as $t) {
                     $tugas[] = new CarouselColumnTemplateBuilder(
-                            $t->judul, 
-                            $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
-                            $t->image, 
-                            [
-                                new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
-                                new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                                new MessageTemplateActionBuilder("Terima Kasih Ochobot!", "Terima Kasih Ochobot!"),
-                            ]
-                        );
+                        $t->judul, 
+                        $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
+                        $t->image, 
+                        [
+                            new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
+                            new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
+                            new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terima Kasih Ochobot"),
+                        ]
+                    );
                 
                 }
-                $this->userGateway->setUserState($this->user['user_id'], 1);
+        
                 $carouselTugas = new CarouselTemplateBuilder($tugas);
-
-                $templateMessage = new TemplateMessageBuilder('Tugas', $carouselTugas);
+        
+                $templateMessage = new TemplateMessageBuilder('Tugas '.date('d-m-Y'), $carouselTugas);
                 $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else {
                 $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Semua Tugas" untuk melihat semua tugas.';
@@ -323,27 +323,28 @@ class Webhook extends Controller {
                 $msg = explode(" ", $userMessage);
                 $idMatkul = end($msg);
                 $tugas = array();
-                $matkul = "";
+                $matkul = new TextMessageBuilder($idMatkul);
                 
-                foreach($this->tugasGateway->getTugasMatkul(intval($idMatkul)) as $t) {
-                    $matkul = $t->nama_matkul;
-                    $tugas[] = new CarouselColumnTemplateBuilder(
-                            $t->judul, 
-                            $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
-                            $t->image, 
-                            [
-                                new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
-                                new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                                new MessageTemplateActionBuilder("Terima Kasih Ochobot!", "Terima Kasih Ochobot!")
-                            ]
-                        );
+                $this->bot->replyMessage($event['replyToken'], $matkul);
+                // foreach($this->tugasGateway->getTugasMatkul(intval($idMatkul)) as $t) {
+                //     $matkul = $t->nama_matkul;
+                //     $tugas[] = new CarouselColumnTemplateBuilder(
+                //             $t->judul, 
+                //             $t->nama_matkul." - Semester ". $t->semester." - ".$t->tahun_ajaran,
+                //             $t->image, 
+                //             [
+                //                 new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
+                //                 new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
+                //                 new MessageTemplateActionBuilder("Terima Kasih Ochobot!", "Terima Kasih Ochobot!")
+                //             ]
+                //         );
                 
-                }
+                // }
 
-                $carouselTugas = new CarouselTemplateBuilder($tugas);
+                // $carouselTugas = new CarouselTemplateBuilder($tugas);
 
-                $templateMessage = new TemplateMessageBuilder('Tugas '.$matkul, $carouselTugas);
-                $this->bot->replyMessage($event['replyToken'], $templateMessage);
+                // $templateMessage = new TemplateMessageBuilder('Tugas '.$matkul, $carouselTugas);
+                // $this->bot->replyMessage($event['replyToken'], $templateMessage);
             } else if(strtolower($userMessage) == "terima kasih ochobot!") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
                 $message = "Apakah ada lagi yang bisa Ochobot lakukan?";
