@@ -12,49 +12,48 @@ use App\Matkul;
 use App\Semester;
 use DB;
 
-class MatkulController extends Controller
+class TugasController extends Controller
 {
 
     public function rules() {
         return [
-            'nama_matkul' => 'required|unique:matkul',
-            'id_semester' => 'required|numeric',
-            'sks' => 'required|numeric',
-            'image' => 'required',
-            'link_matkul' => 'required',
+            'judul' => 'required|unique:tugas',
+            'due_date' => 'required|date',
+            'id_matkul' => 'required',
+            'link_modul' => 'required',
         ];
     }
 
     protected $pesan = [
-        'required' => 'Kolom :attribute tidak boleh kosong.',
+        'required' => 'Kolom :attribute wajib diisi.',
         'unique' => ':attribute sudah ada.',
-        'numeric' => 'Reminder harus diisi dengan angka.'
+        'date' => 'Due date tidak valid.'
     ];
 
-    public function getMatkul() {
-        $matkul = Matkul::with('semester')->where('row_status', 1)->get();
+    public function getAllTugas() {
+        $tugas = Tugas::with('matkul', 'matkul.semester')->where('row_status', 1)->get();
 
         return response([
             'success' => true,
             'message' => '',
-            'data' => $matkul
+            'data' => $tugas
         ]);
     }
 
-    public function showMatkul($id)
+    public function getTugas($id)
     {
         try {
-            $matkul = Matkul::with('semester')->findOrFail($id);
+            $tugas = Tugas::with('matkul', 'matkul.semester')->findOrFail($id);
 
             return response([
                 'status' => 'success',
                 'message' => '',
-                'data' => $matkul
+                'data' => $tugas
             ], 200);
         } catch(ModelNotFoundException $e) {
             return response([
                 'status' => 'failed',
-                'message' => 'ID Matkul tidak ditemukan',
+                'message' => 'ID tugas tidak ditemukan',
                 'data' => $id
             ], 404);
         }
@@ -70,19 +69,19 @@ class MatkulController extends Controller
                 'data' => ''
             ], 500);
         } else {
-            $matkul = Matkul::create($request->all());
+            $tugas = Tugas::create($request->all());
 
             return response()->json([
                 'status' => 'success',
                 'message'=> 'Data berhasil ditambahkan.',
-                'data' => $matkul
+                'data' => $tugas
             ], 200);
         }
     }
 
     public function update(Request $request, $id) {
         $rules = $this->rules();
-        $rules['nama_matkul'] = $rules['nama_matkul'].',nama_matkul,'.$id.',id_matkul';
+        $rules['judul'] = $rules['judul'].',judul,'.$id.',id_tugas';
         $validator = Validator::make($request->all(), $rules, $this->pesan);
 
         if ($validator->fails()) {
@@ -92,13 +91,13 @@ class MatkulController extends Controller
                 'data' => ''
             ], 500);
         } else {
-            $matkul = Matkul::findOrFail($id);
-            $matkul->update($request->all());
+            $tugas = Tugas::findOrFail($id);
+            $tugas->update($request->all());
 
             return response()->json([
                 'status' => 'success',
                 'message'=> 'Data berhasil diupdate.',
-                'data' => $matkul
+                'data' => $tugas
             ], 200);
         }
     }
@@ -106,19 +105,19 @@ class MatkulController extends Controller
     public function destroy($id)
     {
         try {
-            $matkul = Matkul::findOrFail($id);
-            $matkul->row_status = 0;
-            $matkul->update();
+            $tugas = Tugas::findOrFail($id);
+            $tugas->row_status = 0;
+            $tugas->update();
 
             return response([
                 'status' => 'success',
                 'message' => 'Data berhasil dihapus.',
-                'data' => $matkul
+                'data' => $tugas
             ], 200);
         } catch(ModelNotFoundException $e) {
             return response([
                 'status' => 'failed',
-                'message' => 'ID Matkul tidak ditemukan',
+                'message' => 'ID tugas tidak ditemukan',
                 'data' => $id
             ], 404);
         }

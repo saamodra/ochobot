@@ -35,6 +35,7 @@ class TugasGateway {
         $tugas = Tugas::with('matkul', 'matkul.semester')
             ->where('tugas.id_matkul', $matkulId)
             ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
+            ->where('row_status', 1)
             ->orderBy('due_date')
             ->get();
 
@@ -48,6 +49,7 @@ class TugasGateway {
     function getAllTugas() {
         $tugas = Tugas::with('matkul', 'matkul.semester')
             ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
+            ->where('row_status', 1)
             ->orderBy('due_date')
             ->get();
 

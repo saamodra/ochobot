@@ -19,21 +19,17 @@ $router->get('/', function () use ($router) {
 $router->post('/webhook', 'Webhook');
 
 $router->group(['prefix' => 'api'], function () use ($router) {
+    // Matkul
     $router->post('matkul', 'MatkulController@store');
     $router->get('matkul', 'MatkulController@getMatkul');
     $router->get('matkul/{id}', 'MatkulController@showMatkul');
     $router->put('matkul/{id}', 'MatkulController@update');
     $router->delete('matkul/{id}', 'MatkulController@destroy');
+
+    // Tugas
+    $router->post('tugas', 'TugasController@store');
+    $router->get('tugas', 'TugasController@getAllTugas');
+    $router->get('tugas/{id}', 'TugasController@getTugas');
+    $router->put('tugas/{id}', 'TugasController@update');
+    $router->delete('tugas/{id}', 'TugasController@destroy');
 });
-
-// $router->get('/asde/{matkulId}', function($matkulId) {
-//     $matkul = app('db')->table('matkul')
-//             ->where('id', $matkulId)
-//             ->first();
-
-//         if ($matkul) {
-//             return (array) $matkul;
-//         }
-
-//         return null;
-// });

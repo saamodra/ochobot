@@ -30,10 +30,10 @@ class MatkulGateway {
     }
 
     function getAllMatkul() {
-        $matkul = Matkul::with('semester')->get();
+        $semester = Semester::with('matkul')->where('status_semester', '1')->first();
 
-        if($matkul) {
-            return $matkul;
+        if($semester) {
+            return $semester->matkul;
         }
 
         return null;
