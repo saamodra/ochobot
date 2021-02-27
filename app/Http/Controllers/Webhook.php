@@ -306,17 +306,10 @@ class Webhook extends Controller {
     }
 
     private function sendMsgSticker($event, $sticker, $message) {
-        $buttonsTemplate = new ButtonTemplateBuilder(
-            null,
-            $message,
-            null,
-            [
-                new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
-            ]
-        );
+        $textMessageBuilder = new TextMessageBuilder($message);
         $multiMesssageBuilder = new MultiMessageBuilder();
         $multiMesssageBuilder->add($sticker);
-        $multiMesssageBuilder->add(new TemplateMessageBuilder('Thanks', $buttonsTemplate));
+        $multiMesssageBuilder->add(new TemplateMessageBuilder('Thanks', $textMessageBuilder));
         $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
     }
 
@@ -363,16 +356,32 @@ class Webhook extends Controller {
                 $this->CarouselTugas($event, $this->tugasGateway->getAllTugas());
             } else {
                 if($this->user['thx'] == 1) {
-                    $message = 'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Tugas" untuk melihat semua tugas, okay?';
                     $stickerMessageBuilder = new StickerMessageBuilder(11537, 52002735);
+                    $buttonsTemplate = new ButtonTemplateBuilder(
+                        null,
+                        'Silahkan kirim pesan "Mata Kuliah" untuk melihat mata kuliah dan "Tugas" untuk melihat semua tugas, okay?',
+                        null,
+                        [
+                            new MessageTemplateActionBuilder("Mata Kuliah", "Mata Kuliah"),
+                            new MessageTemplateActionBuilder("Semua Tugas", "Tugas")
+                        ]
+                    );
 
-                    $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
+                    $this->sendButtonSticker($event, $stickerMessageBuilder, $buttonsTemplate);
+
                 } else {
-                    $message = "Silahkan tekan tombol dibawah ini!";
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
+                    $buttonsTemplate = new ButtonTemplateBuilder(
+                        null,
+                        "Silahkan tekan tombol dibawah ini!",
+                        null,
+                        [
+                            new MessageTemplateActionBuilder("Terimakasih Ochobot!", "Terimakasih Ochobot!")
+                        ]
+                    );
 
                     // merge all message
-                    $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
+                    $this->sendButtonSticker($event, $stickerMessageBuilder, $buttonsTemplate);
                 }
 
 
@@ -418,11 +427,19 @@ class Webhook extends Controller {
                     // merge all message
                     $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
                 } else {
-                    $message = "Makasihnya manaaa!";
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
+                    $buttonsTemplate = new ButtonTemplateBuilder(
+                        null,
+                        "Silahkan tekan tombol dibawah ini!",
+                        null,
+                        [
+                            new MessageTemplateActionBuilder("Terimakasih Ochobot!", "Terimakasih Ochobot!")
+                        ]
+                    );
+
                     // merge all message
+                    $this->sendButtonSticker($event, $stickerMessageBuilder, $buttonsTemplate);
                 }
-                $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
             }
         } else {
             $message = "Keyword yang anda masukkan salah!";
