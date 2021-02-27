@@ -306,7 +306,7 @@ class Webhook extends Controller {
     }
 
     private function sendMsgSticker($event, $sticker, $message) {
-        $textMessageBuilder = new TextMessageBuilder($message);
+        $textMessageBuilder = new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!");
         $multiMesssageBuilder = new MultiMessageBuilder();
         $multiMesssageBuilder->add($sticker);
         $multiMesssageBuilder->add($textMessageBuilder);
@@ -361,7 +361,7 @@ class Webhook extends Controller {
 
                     $this->sendMsgSticker($event, $stickerMessageBuilder, $message);
                 } else {
-                    $message = "Makasihnya manaaa!";
+                    $message = "Silahkan tekan tombol dibawah ini!";
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626532);
 
                     // merge all message
