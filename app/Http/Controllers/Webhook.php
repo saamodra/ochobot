@@ -268,36 +268,16 @@ class Webhook extends Controller {
     private function CarouselTugas($event, $arrTugas, $matkul = null) {
         $tugas = array();
         foreach($arrTugas as $t) {
-            // $tugas[] = new CarouselColumnTemplateBuilder(
-            //     $t->judul,
-            //     "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
-            //     $t->matkul->image,
-            //     [
-            //         new UriTemplateActionBuilder('Buka E-Learning', $t->matkul->link_matkul),
-            //         new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-            //         // new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
-            //     ]
-            // );
-
             $tugas[] = new CarouselColumnTemplateBuilder(
                 $t->judul,
-                "Deadline : asasd",
+                "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
                 $t->matkul->image,
                 [
                     new UriTemplateActionBuilder('Buka E-Learning', $t->matkul->link_matkul),
                     new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
+                    new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
                 ]
             );
-
-            // $matkul[] = new CarouselColumnTemplateBuilder(
-            //     $t->nama_matkul,
-            //     "Semester ".$t->semester->semester." - ".$t->semester->tahun_ajaran,
-            //     $t->image,
-            //     [
-            //         new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
-            //         new MessageTemplateActionBuilder("Lihat Tugas", "Lihat Tugas ".$t->nama_matkul),
-            //     ]
-            // );
         }
 
         if(empty($tugas)) {
