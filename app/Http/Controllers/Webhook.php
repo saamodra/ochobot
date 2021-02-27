@@ -374,7 +374,7 @@ class Webhook extends Controller {
             if(substr(strtolower($userMessage),0, 11) == "lihat tugas") {
                 $msg = array();
                 $msg = explode(" ", $userMessage);
-                $nama_matkul = substr($userMessage, 13);
+                $nama_matkul = substr($userMessage, 12);
                 $tugas = array();
                 $idMatkul = $this->tugasGateway->getIdMatkul($nama_matkul);
 
@@ -402,7 +402,7 @@ class Webhook extends Controller {
 
             } else {
                 if($this->user['thx'] == 1) {
-                    $message = "Keyword yg anda masukkan salah! Silahkan kirim pesan \"Lihat Tugas <ID Matkul>\" untuk melihat tugas.'";
+                    $message = "Keyword yg anda masukkan salah! Silahkan kirim pesan \"Lihat Tugas <Nama Matkul>\" untuk melihat tugas.'";
                     $stickerMessageBuilder = new StickerMessageBuilder(11538, 51626530);
 
                     // merge all message

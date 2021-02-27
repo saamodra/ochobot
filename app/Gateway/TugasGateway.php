@@ -3,6 +3,7 @@
 namespace App\Gateway;
 use Illuminate\Database\ConnectionInterface;
 use App\Tugas;
+use App\Matkul;
 use DB;
 
 class TugasGateway {
@@ -58,9 +59,7 @@ class TugasGateway {
     }
 
     public function getIdMatkul($nama) {
-        $matkul = $this->db->table('matkul')
-        ->where('nama_matkul', $nama)
-        ->first();
+        $matkul = Matkul::where('nama_matkul', $nama)->first();
 
         return $matkul->id_matkul;
     }

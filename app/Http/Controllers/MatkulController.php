@@ -31,17 +31,12 @@ class MatkulController extends Controller
     ];
 
     public function getMatkul() {
-        $tugas = Tugas::with('matkul', 'matkul.semester')
-            ->where('tugas.id_matkul', $matkulId)
-            ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
-            ->orderBy('due_date')
-            ->get();
-        // $matkul = Matkul::with('semester')->get();
+        $matkul = Matkul::with('semester')->get();
 
         return response([
             'success' => true,
             'message' => '',
-            'data' => $tugas
+            'data' => $matkul
         ]);
     }
 
