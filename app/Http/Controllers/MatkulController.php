@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use App\Gateway\TugasGateway;
 use App\Tugas;
 use App\Matkul;
 use App\Semester;
@@ -33,16 +34,10 @@ class MatkulController extends Controller
     public function getMatkul() {
         $matkul = Matkul::with('semester')->get();
 
-        // $matkul = Tugas::with('matkul', 'matkul.semester')
-        //     ->where('tugas.id_matkul', 1)
-        //     ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
-        //     ->orderBy('due_date')
-        //     ->first();
-
         return response([
             'success' => true,
             'message' => '',
-            'data' => $matkul
+            'data' => $tugas
         ]);
     }
 

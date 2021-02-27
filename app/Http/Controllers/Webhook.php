@@ -266,7 +266,7 @@ class Webhook extends Controller {
     }
 
     private function CarouselTugas($event, $arrTugas, $matkul = null) {
-        file_put_contents("php://stderr", var_dump($arrTugas).PHP_EOL);
+        $tugas = array();
         foreach($arrTugas as $t) {
             $tugas[] = new CarouselColumnTemplateBuilder(
                 $t->judul,
