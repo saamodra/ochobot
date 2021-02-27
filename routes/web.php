@@ -21,7 +21,7 @@ $router->post('/webhook', 'Webhook');
 $router->get('/asd/{matkulId}', 'ExampleController@getTugasMatkul');
 
 $router->post('/api/matkul', 'MatkulController@store');
-$router->get('/api/matkul', 'MatkulController@getmatkul');
+$router->get('/api/matkul', 'MatkulController@getMatkul');
 $router->get('/api/matkul/{id}', 'MatkulController@showMatkul');
 $router->post('/api/matkul/update/{id}', 'MatkulController@update');
 $router->get('/api/matkul/delete/{id}', 'MatkulController@destroy');
@@ -30,10 +30,10 @@ $router->get('/api/matkul/delete/{id}', 'MatkulController@destroy');
 //     $matkul = app('db')->table('matkul')
 //             ->where('id', $matkulId)
 //             ->first();
- 
+
 //         if ($matkul) {
 //             return (array) $matkul;
 //         }
- 
+
 //         return null;
 // });
