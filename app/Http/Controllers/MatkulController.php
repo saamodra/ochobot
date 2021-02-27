@@ -33,6 +33,21 @@ class MatkulController extends Controller
 
     public function getMatkul() {
         $matkul = Matkul::with('semester')->get();
+        $tugasA = Tugas::with('matkul', 'matkul.semester')
+            ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
+            ->orderBy('due_date')
+            ->get();
+        $tgGateway = new TugasGateway();
+        $tugas = array();
+        foreach($tugasA as $t) {
+            $tugas[] = [
+                'judul' => $t->judul,
+                'deadline' => $tgGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
+                'image' => $t->matkul->image,
+                'linkmatkul' => $t->matkul->link_matkul,
+                'linkmodul' => $t->link_modul,
+            ];
+        }
 
         return response([
             'success' => true,

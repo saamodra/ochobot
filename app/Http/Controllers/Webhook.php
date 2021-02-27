@@ -275,7 +275,7 @@ class Webhook extends Controller {
                 [
                     new UriTemplateActionBuilder('Buka E-Learning', $t->matkul->link_matkul),
                     new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                    new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
+                    // new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
                 ]
             );
         }
@@ -286,7 +286,7 @@ class Webhook extends Controller {
             // merge all message
             $buttonsTemplate = new ButtonTemplateBuilder(
                 null,
-                "Hari ini ".$matkul." nggak ada tugas nih, rebahan kuy!",
+                "Hari ini ".$matkul." tidak ada tugas.",
                 null,
                 [
                     new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
