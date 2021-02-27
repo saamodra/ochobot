@@ -14,4 +14,21 @@ class Matkul extends Model {
     ];
 
     public $timestamps = false;
+
+    /**
+     * Get the semester that owns the matkul.
+     */
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester');
+    }
+
+    /**
+     * Get the tugas for the matkul.
+     */
+    public function tugas()
+    {
+        return $this->hasMany(Tugas::class, 'id_matkul');
+    }
+
 }

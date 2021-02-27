@@ -7,14 +7,15 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Matkul;
+use App\Semester;
 use DB;
 
 class MatkulController extends Controller
 {
 
-    public function rules() {
+    public function rules($id = '') {
         return [
-            'nama_matkul' => 'required|unique:matkul',
+            'nama_matkul' => 'required|unique:matkul,nama_matkul,'. $id.',id_matkul',
             'id_semester' => 'required|numeric',
             'sks' => 'required|numeric',
             'image' => 'required',
@@ -29,19 +30,19 @@ class MatkulController extends Controller
     ];
 
     public function getMatkul() {
-        $matkul = Matkul::get();
+        $matkul = Matkul::with('semester')->get();
 
         return response([
             'success' => true,
             'message' => '',
-            'data' => $matkul
+            'data' => $matkul->semester()
         ]);
     }
 
     public function showMatkul($id)
     {
         try {
-            $matkul = Matkul::findOrFail($id);
+            $matkul = Matkul::with('semester')->findOrFail($id);
 
             return response([
                 'status' => 'success',
@@ -78,7 +79,7 @@ class MatkulController extends Controller
     }
 
     public function update(Request $request, $id) {
-        $validator = Validator::make($request->all(), $this->rules(), $this->pesan);
+        $validator = Validator::make($request->all(), $this->rules($id), $this->pesan);
 
         if ($validator->fails()) {
             return response()->json([
