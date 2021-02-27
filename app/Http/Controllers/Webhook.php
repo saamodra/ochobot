@@ -177,9 +177,9 @@ class Webhook extends Controller {
                 $tugas[] = new CarouselColumnTemplateBuilder(
                     $t->judul,
                     "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
-                    $t->matkul()->image,
+                    $t->matkul->image,
                     [
-                        new UriTemplateActionBuilder('Buka E-Learning', $t->matkul()->link_matkul),
+                        new UriTemplateActionBuilder('Buka E-Learning', $t->matkul->link_matkul),
                         new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
                         new MessageTemplateActionBuilder("Terimakasih Ochobot", "Terimakasih Ochobot!"),
                     ]
@@ -270,9 +270,9 @@ class Webhook extends Controller {
             $tugas[] = new CarouselColumnTemplateBuilder(
                 $t->judul,
                 "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
-                $t->matkul()->image,
+                $t->matkul->image,
                 [
-                    new UriTemplateActionBuilder('Buka E-Learning', $t->matkul()->link_matkul),
+                    new UriTemplateActionBuilder('Buka E-Learning', $t->matkul->link_matkul),
                     new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
                     new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
                 ]
@@ -336,7 +336,7 @@ class Webhook extends Controller {
                 foreach($this->matkulGateway->getAllMatkul() as $t) {
                     $matkul[] = new CarouselColumnTemplateBuilder(
                             $t->nama_matkul,
-                            "Semester ".$t->semester()->semester." - ".$t->semester()->tahun_ajaran,
+                            "Semester ".$t->semester->semester." - ".$t->semester->tahun_ajaran,
                             $t->image,
                             [
                                 new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),

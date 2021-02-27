@@ -20,6 +20,6 @@ class Tugas extends Model {
      */
     public function matkul()
     {
-        return $this->belongsTo(Matkul::class, 'id_matkul');
+        return $this->belongsTo(Matkul::class, 'id_matkul', 'id_matkul');
     }
 }
