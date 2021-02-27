@@ -266,7 +266,7 @@ class Webhook extends Controller {
     }
 
     private function CarouselTugas($event, $arrTugas, $matkul = null) {
-        var_dump($arrTugas);
+        file_put_contents("php://stderr", var_dump($arrTugas).PHP_EOL);
         foreach($arrTugas as $t) {
             $tugas[] = new CarouselColumnTemplateBuilder(
                 $t->judul,
@@ -381,11 +381,9 @@ class Webhook extends Controller {
 
                 $tugasMatkul = $this->tugasGateway->getTugasMatkul(intval($idMatkul));
 
-                var_dump($tugasMatkul);
-
                 $this->CarouselTugas($event, $tugasMatkul, $nama_matkul);
 
-            } else if(strtolower($userMessage) == "terimakasih ochobot!") {
+            } else if(substr(strtolower($userMessage),0, 11) == "terimakasih") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
                 $this->userGateway->setThxState($this->user['user_id'], 1);
 
