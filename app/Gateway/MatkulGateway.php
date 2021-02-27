@@ -18,18 +18,19 @@ class MatkulGateway {
     function getMatkul(int $matkulId)
     {
         $matkul = $this->db->table('matkul')
+            ->with('semester')
             ->where('id', $matkulId)
             ->first();
- 
+
         if ($matkul) {
             return (array) $matkul;
         }
- 
+
         return null;
     }
 
     function getAllMatkul() {
-        $matkul = $this->db->table('matkul')->get();
+        $matkul = $this->db->table('matkul')->with('semester')->get();
 
         if($matkul) {
             return $matkul;
@@ -37,7 +38,7 @@ class MatkulGateway {
 
         return null;
     }
- 
+
     function isAnswerEqual(int $number, string $answer)
     {
         return $this->db->table('questions')
