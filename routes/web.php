@@ -18,13 +18,13 @@ $router->get('/', function () use ($router) {
 
 $router->post('/webhook', 'Webhook');
 
-$router->get('/asd/{matkulId}', 'ExampleController@getTugasMatkul');
-
-$router->post('/api/matkul', 'MatkulController@store');
-$router->get('/api/matkul', 'MatkulController@getMatkul');
-$router->get('/api/matkul/{id}', 'MatkulController@showMatkul');
-$router->post('/api/matkul/update/{id}', 'MatkulController@update');
-$router->get('/api/matkul/delete/{id}', 'MatkulController@destroy');
+$router->group(['prefix' => 'api'], function () use ($router) {
+    $router->post('matkul', 'MatkulController@store');
+    $router->get('matkul', 'MatkulController@getMatkul');
+    $router->get('matkul/{id}', 'MatkulController@showMatkul');
+    $router->put('matkul/{id}', 'MatkulController@update');
+    $router->delete('matkul/{id}', 'MatkulController@destroy');
+});
 
 // $router->get('/asde/{matkulId}', function($matkulId) {
 //     $matkul = app('db')->table('matkul')
