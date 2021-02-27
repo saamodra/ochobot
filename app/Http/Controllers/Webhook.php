@@ -306,10 +306,17 @@ class Webhook extends Controller {
     }
 
     private function sendMsgSticker($event, $sticker, $message) {
-        $textMessageBuilder = new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!");
+        $buttonsTemplate = new ButtonTemplateBuilder(
+            null,
+            $message,
+            null,
+            [
+                new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
+            ]
+        );
         $multiMesssageBuilder = new MultiMessageBuilder();
         $multiMesssageBuilder->add($sticker);
-        $multiMesssageBuilder->add($textMessageBuilder);
+        $multiMesssageBuilder->add(new TemplateMessageBuilder('Thanks', $buttonsTemplate));
         $this->bot->replyMessage($event['replyToken'], $multiMesssageBuilder);
     }
 
