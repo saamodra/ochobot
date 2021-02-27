@@ -281,7 +281,7 @@ class Webhook extends Controller {
 
             $tugas[] = new CarouselColumnTemplateBuilder(
                 $t->judul,
-                "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
+                "Deadline : asasd",
                 $t->matkul->image,
                 [
                     new UriTemplateActionBuilder('Buka E-Learning', $t->matkul->link_matkul),
