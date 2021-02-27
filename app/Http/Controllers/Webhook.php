@@ -268,6 +268,17 @@ class Webhook extends Controller {
     private function CarouselTugas($event, $arrTugas, $matkul = null) {
         $tugas = array();
         foreach($arrTugas as $t) {
+            // $tugas[] = new CarouselColumnTemplateBuilder(
+            //     $t->judul,
+            //     "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
+            //     $t->matkul->image,
+            //     [
+            //         new UriTemplateActionBuilder('Buka E-Learning', $t->matkul->link_matkul),
+            //         new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
+            //         // new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
+            //     ]
+            // );
+
             $tugas[] = new CarouselColumnTemplateBuilder(
                 $t->judul,
                 "Deadline : ".$this->tugasGateway->datedifference(strtotime($t->due_date))."\n* ".date("d M Y h:i", strtotime($t->due_date)),
@@ -275,9 +286,18 @@ class Webhook extends Controller {
                 [
                     new UriTemplateActionBuilder('Buka E-Learning', $t->matkul->link_matkul),
                     new UriTemplateActionBuilder('Buka Modul Soal', $t->link_modul),
-                    // new MessageTemplateActionBuilder("Terima Kasih Ochobot", "Terimakasih Ochobot!"),
                 ]
             );
+
+            // $matkul[] = new CarouselColumnTemplateBuilder(
+            //     $t->nama_matkul,
+            //     "Semester ".$t->semester->semester." - ".$t->semester->tahun_ajaran,
+            //     $t->image,
+            //     [
+            //         new UriTemplateActionBuilder('Buka E-Learning', $t->link_matkul),
+            //         new MessageTemplateActionBuilder("Lihat Tugas", "Lihat Tugas ".$t->nama_matkul),
+            //     ]
+            // );
         }
 
         if(empty($tugas)) {
@@ -294,7 +314,7 @@ class Webhook extends Controller {
             );
             $multiMesssageBuilder = new MultiMessageBuilder();
             $multiMesssageBuilder->add($stickerMessageBuilder);
-            $multiMesssageBuilder->add(new TemplateMessageBuilder('Tugas', $buttonsTemplate));
+            $multiMesssageBuilder->add(new TemplateMessageBuilder('Tugas '.$matkul, $buttonsTemplate));
         } else {
             $carouselTugas = new CarouselTemplateBuilder($tugas);
 
@@ -383,7 +403,7 @@ class Webhook extends Controller {
 
                 $this->CarouselTugas($event, $tugasMatkul, $nama_matkul);
 
-            } else if(substr(strtolower($userMessage),0, 11) == "terimakasih") {
+            } else if(trim(substr(strtolower($userMessage),0, 11)) == "terimakasih") {
                 $this->userGateway->setUserState($this->user['user_id'], 0);
                 $this->userGateway->setThxState($this->user['user_id'], 1);
 
