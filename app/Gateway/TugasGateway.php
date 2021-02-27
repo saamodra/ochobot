@@ -17,7 +17,7 @@ class TugasGateway {
     }
 
     // Matkul
-    public function getTugas(int $tugasId)
+    function getTugas(int $tugasId)
     {
         $tugas = Tugas::with('matkul', 'matkul.semester')
             ->where('id_tugas', $tugasId)
@@ -30,7 +30,7 @@ class TugasGateway {
         return null;
     }
 
-    public function getTugasMatkul(int $matkulId)
+    function getTugasMatkul(int $matkulId)
     {
         $tugas = Tugas::with('matkul', 'matkul.semester')
             ->where('tugas.id_matkul', $matkulId)
@@ -45,7 +45,7 @@ class TugasGateway {
         return null;
     }
 
-    public function getAllTugas() {
+    function getAllTugas() {
         $tugas = Tugas::with('matkul', 'matkul.semester')
             ->where('due_date', '>=', DB::raw('now() AT TIME ZONE \'Asia/Jakarta\''))
             ->orderBy('due_date')
