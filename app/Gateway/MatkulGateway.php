@@ -3,6 +3,7 @@
 namespace App\Gateway;
 
 use Illuminate\Database\ConnectionInterface;
+use App\Matkul;
 
 class MatkulGateway {
     /**
@@ -17,9 +18,8 @@ class MatkulGateway {
     // Matkul
     function getMatkul(int $matkulId)
     {
-        $matkul = $this->db->table('matkul')
-            ->with('semester')
-            ->where('id', $matkulId)
+        $matkul = Matkul::with('semester')
+            ->where('id_matkul', $matkulId)
             ->first();
 
         if ($matkul) {
@@ -30,7 +30,7 @@ class MatkulGateway {
     }
 
     function getAllMatkul() {
-        $matkul = $this->db->table('matkul')->with('semester')->get();
+        $matkul = Matkul::with('semester')->get();
 
         if($matkul) {
             return $matkul;
