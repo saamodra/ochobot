@@ -19,6 +19,10 @@ $router->get('/', function () use ($router) {
 $router->post('/webhook', 'Webhook');
 
 $router->group(['prefix' => 'api'], function () use ($router) {
+    // Semester
+    $router->get('semester', 'SemesterController@getAllSemester');
+    $router->get('semester/{id}', 'SemesterController@getSemester');
+
     // Matkul
     $router->post('matkul', 'MatkulController@store');
     $router->get('matkul', 'MatkulController@getMatkul');
